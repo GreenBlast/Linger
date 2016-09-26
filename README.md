@@ -51,8 +51,16 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 
 ### Adapters
 
+<<<<<<< HEAD
 * DirWatchAdapter.py - Adapter that uses python-watchdog to watch over directory changes, most of the time there should be only one active, because it can handle more than one directory for each instance
 * GMailAdapter.py – Adapter that helps to interact with Gmail (Send mails, check periodically for new mails)
 * IspyAdapter.py – Adapters to send command to an [Ispy](https://www.ispyconnect.com) server
 * LogAdapter.py - Adapter that write lines to the log
 * ProcessAdapter.py – Adapter that manages an instance of a process
+=======
+DirWatchAdapter.py - Adapter that uses python-watchdog to watch over directory changes, most of the time there should be only one active, because it can handle more than one directory for each instance
+GMailAdapter.py – Adapter that helps to interact with Gmail (Send mails, check periodically for new mails)
+IspyAdapter.py – Adapters to send command to an [Ispy](https://www.ispyconnect.com) server
+LogAdapter.py - Adapter that write lines to the log
+ProcessAdapter.py – Adapter that manages an instance of a process
+>>>>>>> master
