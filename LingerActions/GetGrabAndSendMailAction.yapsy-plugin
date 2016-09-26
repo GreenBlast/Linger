@@ -1,0 +1,9 @@
+[Core]
+Name = GetGrabAndSendMailActionFactory
+Module = GetGrabAndSendMailAction
+    
+[Documentation]
+Description = GetGrabAndSendMailActionFactory creating instances of GetGrabAndSendMailAction which Takes a picture and send it via mail
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

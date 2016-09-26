@@ -1,0 +1,9 @@
+[Core]
+Name = ProcessAdapterFactory
+Module = ProcessAdapter
+   
+[Documentation]
+Description = ProcessAdapterFactory creating instances of ProcessAdapter , an adapter used to create and control specific process
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

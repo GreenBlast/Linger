@@ -1,0 +1,9 @@
+[Core]
+Name = DirWatchTriggerFactory
+Module = DirWatchTrigger
+    
+[Documentation]
+Description = DirWatchTriggerFactory creating instances of DirWatchTrigger which notifies when a directory has changed
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

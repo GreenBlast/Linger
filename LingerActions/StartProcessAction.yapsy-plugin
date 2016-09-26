@@ -1,0 +1,9 @@
+[Core]
+Name = StartProcessActionFactory
+Module = StartProcessAction
+    
+[Documentation]
+Description = StartProcessActionFactory creating instances of StartProcessAction which enables starting a process
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

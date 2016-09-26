@@ -1,0 +1,9 @@
+[Core]
+Name = RestartLingerActionFactory
+Module = RestartLingerAction
+    
+[Documentation]
+Description = RestartLingerActionFactory creating instances of RestartLingerAction which restarts linger
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

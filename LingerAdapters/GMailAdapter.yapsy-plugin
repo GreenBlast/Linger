@@ -1,0 +1,9 @@
+[Core]
+Name = GMailAdapterFactory
+Module = GMailAdapter
+   
+[Documentation]
+Description = GMailAdapterFactory creating instances of GMailAdapter which enables working with a gmail account
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

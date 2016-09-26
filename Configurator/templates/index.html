@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div id="content">
+    <!-- Getting server address from the server itself -->
+    <script type="text/javascript">var server_address = '{{server_address}}'</script>
+    <script type="text/javascript" src="{{ url_for('static', filename='build/app.js')}}"></script>
+{% endblock %}

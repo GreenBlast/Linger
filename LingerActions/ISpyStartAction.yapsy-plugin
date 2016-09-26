@@ -1,0 +1,9 @@
+[Core]
+Name = ISpyStartActionFactory
+Module = ISpyStartAction
+    
+[Documentation]
+Description = ISpyStartActionFactory creating instances of ISpyStartAction which starts ISpy monitoring
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

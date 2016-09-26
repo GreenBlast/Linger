@@ -1,0 +1,9 @@
+[Core]
+Name = FileDeleteTriggerFactory
+Module = FileDeleteTrigger
+    
+[Documentation]
+Description = FileDeleteTriggerFactory creating instances of FileDeleteTrigger, which creates a trigger file that when deleted calls the given action
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

@@ -1,0 +1,9 @@
+[Core]
+Name = NewMailFilterByCommandTriggerFactory
+Module = NewMailFilterByCommandTrigger
+    
+[Documentation]
+Description = NewMailFilterByCommandTriggerFactory creating instances of NewMailFilterByCommandTrigger Which periodically checks for new Emails
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

@@ -1,0 +1,9 @@
+[Core]
+Name = ISpyStopActionFactory
+Module = ISpyStopAction
+    
+[Documentation]
+Description = ISpyStopActionFactory creating instances of ISpyStopAction which stops ISpy monitoring
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com

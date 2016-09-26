@@ -1,0 +1,9 @@
+[Core]
+Name = DirWatchAdapterFactory
+Module = DirWatchAdapter
+    
+[Documentation]
+Description = DirWatchAdapterFactory creating instances of DirWatchAdapter, Manages watches over directories and call callback when a something changes
+Author = Greenblast
+Version = 1.0
+Website = greenfighter@gmail.com
