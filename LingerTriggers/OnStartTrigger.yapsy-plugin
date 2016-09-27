@@ -6,4 +6,4 @@ Module = OnStartTrigger
 Description = OnstartTriggerFactory creating instances of OnstartTrigger which doing something 5 seconds after linger starts
 Author = Greenblast
 Version = 1.0
-Website = greenfighter@gmail.com
+Website = https://github.com/greenblast/linger/

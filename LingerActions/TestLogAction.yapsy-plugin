@@ -6,4 +6,4 @@ Module = TestLogAction
 Description = TestLogActionFactory creating instances of TestLogAction prints a log line
 Author = Greenblast
 Version = 1.0
-Website = greenfighter@gmail.com
+Website = https://github.com/greenblast/linger/

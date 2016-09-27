@@ -6,4 +6,4 @@ Module = ISpyAdapter
 Description = ISpyAdapterFactory creating instances of ISpyAdapter, an adapter used to communicate with Ispy process via http requests
 Author = Greenblast
 Version = 1.0
-Website = greenfighter@gmail.com
+Website = https://github.com/greenblast/linger/

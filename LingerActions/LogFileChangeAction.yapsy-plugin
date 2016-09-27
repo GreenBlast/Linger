@@ -6,4 +6,4 @@ Module = LogFileChangeAction
 Description = LogFileChangeActionFactory creating instances of LogFileChangeAction, an action that writes about the change to the log, mainly for testing purposes
 Author = Greenblast
 Version = 1.0
-Website = greenfighter@gmail.com
+Website = https://github.com/greenblast/linger/

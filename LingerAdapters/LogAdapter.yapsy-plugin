@@ -6,4 +6,4 @@ Module = LogAdapter
 Description = LogAdapterFactory creating instances of LogAdapter, an adapter used to add lines to the log, mainly for testing purposes
 Author = Greenblast
 Version = 1.0
-Website = greenfighter@gmail.com
+Website = https://github.com/greenblast/linger/

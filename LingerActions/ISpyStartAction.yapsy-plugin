@@ -6,4 +6,4 @@ Module = ISpyStartAction
 Description = ISpyStartActionFactory creating instances of ISpyStartAction which starts ISpy monitoring
 Author = Greenblast
 Version = 1.0
-Website = greenfighter@gmail.com
+Website = https://github.com/greenblast/linger/

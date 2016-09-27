@@ -6,4 +6,4 @@ Module = StopProcessAction
 Description = StopProcessActionFactory creating instances of StopProcessAction which enables stopping a process
 Author = Greenblast
 Version = 1.0
-Website = greenfighter@gmail.com
+Website = https://github.com/greenblast/linger/
