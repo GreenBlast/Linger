@@ -48,6 +48,9 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 * StopProcessAction.py – Stops process using process adapter
 * StopProcessAndChildrenAction.py – Stops all children of a process and then stops the process using process adapter
 * TestLogAction.py – Prints a given line to the log
+* StartACIfTempAction.py - Starts the Air conditioner by using RMBridgeAdapter if current temperature is above the given min temperature
+* StopACAction.py - Stops the Air conditioner by using RMBridgeAdapter
+* ToggleACStateAction.py - Toggles the Air conditioner in the RMBridgeAdapter
 
 ### Adapters
 
@@ -56,3 +59,4 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 * IspyAdapter.py – Adapters to send command to an [Ispy](https://www.ispyconnect.com) server
 * LogAdapter.py - Adapter that write lines to the log
 * ProcessAdapter.py – Adapter that manages an instance of a process
+* RMBridgeAdapter.py - Adapter to communicate with [RMBridge](http://rm-bridge.fun2code.de/) Which sends commands to a [broadlink RMPro](http://www.ibroadlink.com/rmPro/)

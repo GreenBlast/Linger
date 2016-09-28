@@ -1,0 +1,9 @@
+[Core]
+Name = ToggleACStateActionFactory
+Module = ToggleACStateAction
+    
+[Documentation]
+Description = ToggleACStateActionFactory creating instances of ToggleACStateAction which Toggles the rmbridge adapter ac state
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

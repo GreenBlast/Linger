@@ -1,0 +1,9 @@
+[Core]
+Name = RMBridgeAdapterFactory
+Module = RMBridgeAdapter
+    
+[Documentation]
+Description = RMBridgeAdapterFactory creating instances of RMBridgeAdapter which # TODO fill in
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

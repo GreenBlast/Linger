@@ -1,0 +1,9 @@
+[Core]
+Name = StopACActionFactory
+Module = StopACAction
+    
+[Documentation]
+Description = StopACActionFactory creating instances of StopACAction which shutsdown the Air conditioner
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

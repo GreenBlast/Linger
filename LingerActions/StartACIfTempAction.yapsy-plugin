@@ -1,0 +1,9 @@
+[Core]
+Name = StartACIfTempActionFactory
+Module = StartACIfTempAction
+    
+[Documentation]
+Description = StartACIfTempActionFactory creating instances of StartACIfTempAction which Starts the Air conditioner if the current room temperature is above the given temperature 
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
