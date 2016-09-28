@@ -40,6 +40,6 @@ class PeriodicalTriggerFactory(lingerTriggers.LingerBaseTriggerFactory):
 
     def get_fields(self):
         fields, optional_fields = super(PeriodicalTriggerFactory, self).get_fields()
-        fields +=[("intervalSec","number")]
+        fields +=[("intervalSec","float")]
 
         return (fields,optional_fields)

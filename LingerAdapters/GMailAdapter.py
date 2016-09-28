@@ -147,6 +147,6 @@ class GMailAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
 
         fields += [('gmail_user',"string"),
                     ('gmail_password',"string"),
-                    ("intervalSec","number"),
+                    ("intervalSec","float"),
                     ]
         return (fields,optional_fields)
