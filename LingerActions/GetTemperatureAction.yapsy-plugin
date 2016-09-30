@@ -1,0 +1,9 @@
+[Core]
+Name = GetTemperatureActionFactory
+Module = GetTemperatureAction
+    
+[Documentation]
+Description = GetTemperatureActionFactory creating instances of GetTemperatureAction which replies the temperature got from the rmpro
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

@@ -6,7 +6,7 @@ Linger is a trigger to action configurable platform, written in Python
 It runs, where you run it, and waits for the given triggers to occur, when something like that happens, the trigger would call the actions associated with it.
 
 ## What do you use it for?
-Right now, to starts [ispy](https://www.ispyconnect.com) on a certain computer, and to start several applications on my Raspberry pi without getting out of my chair. 
+Right now, I use it to start my Air conditioner few minutes before getting to home using [broadlink RMPro](http://www.ibroadlink.com/rmPro/), to starts [ispy](https://www.ispyconnect.com) on a certain computer, and to start several applications on my Raspberry pi without getting out of my chair. And I intend to use it for various home automation projects in the future (As it more versatile than out of the box solutions, if you know how to program)
 
 
 ## Who should use this?

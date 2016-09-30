@@ -28,6 +28,9 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
         self._gmail_password = self.configuration["gmail_password"]
         self.interval = float(self.configuration["intervalSec"])
 
+        # optional_fields
+        self.recipient_email =  self.configuration.get("recipient_email", self._gmail_user)
+        
         self.logger.info("GMailAdapter configured with user=%s" % (self._gmail_user,))
 
 
@@ -133,6 +136,9 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
         mailServer.sendmail(self._gmail_user, to, message.as_string())
         mailServer.quit()
 
+    def send_message(self, subject, text):
+            self.send_mail(self.recipient_email, subject, text)
+
 class GMailAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     """GMailAdapterFactory generates GMailAdapter instances"""
     def __init__(self):
@@ -149,4 +155,6 @@ class GMailAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
                     ('gmail_password',"string"),
                     ("intervalSec","float"),
                     ]
+
+        optional_fields = [("recipient_email","string")]
         return (fields,optional_fields)
