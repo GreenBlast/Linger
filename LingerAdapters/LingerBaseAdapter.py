@@ -7,6 +7,9 @@ class LingerBaseAdapter(LingerItem):
     def __init__(self, configuration):
         super(LingerBaseAdapter, self).__init__(configuration)
 
+    def send_message(self, subject, text):
+        self.logger.info("Sending message with subject:{} message text:{}".format(subject, text))
+        
 class LingerBaseAdapterFactory(LingerPlugin):
     """Base adapter factory for linger"""
     def __init__(self):
