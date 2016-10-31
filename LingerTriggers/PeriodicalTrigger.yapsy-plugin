@@ -1,0 +1,9 @@
+[Core]
+Name = PeriodicalTriggerFactory
+Module = PeriodicalTrigger
+    
+[Documentation]
+Description = PeriodicalTriggerFactory creating instances of PeriodicalTrigger which doing something every given interval
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
