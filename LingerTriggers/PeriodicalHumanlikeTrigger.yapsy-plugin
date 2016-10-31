@@ -1,0 +1,9 @@
+[Core]
+Name = PeriodicalHumanlikeTriggerFactory
+Module = PeriodicalHumanlikeTrigger
+    
+[Documentation]
+Description = PeriodicalHumanlikeTriggerFactory creating instances of PeriodicalHumanlikeTrigger which doing something every given interval while adding a random interval and not activating on defined sleep times. To simulate human behaviour.
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
