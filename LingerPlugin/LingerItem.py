@@ -12,3 +12,6 @@ class LingerItem(object):
         self.uuid = self.configuration["uuid"]
         self.subtype = self.configuration["subtype"]
         self.get_adapter_by_uuid = self.configuration['get_adapter_by_uuid']
+
+    def cleanup(self):
+        pass

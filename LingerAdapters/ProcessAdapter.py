@@ -88,6 +88,9 @@ class ProcessAdapter(lingerAdapters.LingerBaseAdapter):
             del self.process
             self.process = None
 
+    def cleanup(self):
+        self.stop_with_all_children()
+
 class ProcessAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     """ProcessAdapterFactory generates ProcessAdapter instances"""
     def __init__(self):

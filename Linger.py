@@ -74,6 +74,8 @@ class Linger(object):
 
         # Register triggers
         for trigger_id, trigger_action_item in self.configuration["TriggerActions"].iteritems():
+            if trigger_action_item['enabled'] == True:
+                self.triggers_manager.set_enabled(trigger_id)
             for action_id in trigger_action_item['actions']:
                 self.actions_by_trigger[trigger_id][action_id] = self.actions_manager.get_action(action_id)
                 self.triggers_manager.register_action_to_trigger(trigger_id, self.actions_by_trigger[trigger_id][action_id])
@@ -138,6 +140,9 @@ class Linger(object):
             time.sleep(1)
 
     def clean(self):
+        self.adapters_manager.cleanup()
+        self.actions_manager.cleanup()
+        self.triggers_manager.cleanup()
         if self.should_restart:
             args = sys.argv[:]
             self.logger.debug('Re-spawning %s' % ' '.join(args))

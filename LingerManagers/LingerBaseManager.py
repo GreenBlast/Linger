@@ -8,6 +8,7 @@ class LingerBaseManager(object):
         self.logger = logging.getLogger('Linger')
         self.plugin_path = plugin_path
         self.manager_type = "Base"
+        self.plugin_instances = {}
 
         # Loading plugins
         self.plugin_manager = PluginManager()
@@ -19,3 +20,7 @@ class LingerBaseManager(object):
     
     def get_loaded_plugins_types_names(self):
         return self.loaded_plugins_by_types.keys()
+
+    def cleanup(self):
+        for instance in self.plugin_instances.itervalues():
+            instance.cleanup()

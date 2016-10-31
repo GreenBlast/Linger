@@ -9,6 +9,7 @@ class LingerBaseTrigger(LingerItem):
         self.trigger_callback = configuration['trigger_callback']        
         self.trigger_specific_action_callback = configuration['trigger_specific_action_callback']        
         self.actions = {}
+        self.enabled = False
 
     def trigger_engaged(self):
         self.logger.debug("trigger_engaged")
