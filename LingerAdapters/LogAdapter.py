@@ -10,6 +10,9 @@ class LogAdapter(lingerAdapters.LingerBaseAdapter):
     def log(self, what_to_log):
         self.logger.info(what_to_log)
 
+    def send_message(self, subject, text):
+        self.log("Logging message. Subject: {}, text: {}".format(subject,text))
+
 class LogAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     """LogAdapterFactory generates LogAdapter instances"""
     def __init__(self):
