@@ -51,6 +51,7 @@ class Linger(object):
             'coalesce': True,
             'max_instances': 1
         }
+        
         self.scheduler = BackgroundScheduler(job_defaults=job_defaults)
         # logging.getLogger('apscheduler').setLevel(logging.WARNING)
         

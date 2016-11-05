@@ -35,6 +35,7 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 * OnStartTrigger.py – Calls its actions 5 seconds after Linger is up
 * PeriodicalTrigger.py – Calls its actions every given interval in seconds, using Linger scheduler
 * ThreadedPeriodicalTrigger.py – Creates a thread that calls an action every given interval in seconds
+* PeriodicalHumanlikeTrigger - Does actions periodically, but adds a random interval and not acting between given sleep times
 
 ### Actions
 

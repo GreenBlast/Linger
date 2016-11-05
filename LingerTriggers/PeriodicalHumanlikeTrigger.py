@@ -58,6 +58,7 @@ class PeriodicalHumanlikeTrigger(lingerTriggers.LingerBaseTrigger):
         while self.is_in_sleep_time(interval_to_next_job_in_seconds):
             interval_to_next_job_in_seconds += self.interval
 
+        self.logger.debug("Next job in seconds is:{}".format(interval_to_next_job_in_seconds))
         self.scheduled_job = self.scheduler.add_job(self.trigger_check_condition, 'interval', seconds=interval_to_next_job_in_seconds)
                         
     def trigger_engaged(self, event_details=None):
@@ -65,7 +66,7 @@ class PeriodicalHumanlikeTrigger(lingerTriggers.LingerBaseTrigger):
 
     def start(self):
         if self.should_trigger_on_start:
-            self.scheduled_job = self.scheduler.add_job(self.trigger_check_condition,'date', run_date=datetime.datetime.now() + datetime.timedelta(0,5))
+            self.scheduled_job = self.scheduler.add_job(self.trigger_check_condition,'date', run_date=datetime.datetime.now() + datetime.timedelta(0,10))
         else:
             self.scheduled_job = self.scheduler.add_job(self.trigger_check_condition, 'interval', seconds=self.interval)
 
