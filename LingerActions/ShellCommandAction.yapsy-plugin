@@ -1,0 +1,9 @@
+[Core]
+Name = ShellCommandActionFactory
+Module = ShellCommandAction
+    
+[Documentation]
+Description = ShellCommandActionFactory creating instances of ShellCommandAction calls a shell command
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
