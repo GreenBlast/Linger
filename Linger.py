@@ -18,7 +18,7 @@ LOG_FILE_LOCATION = r"." + os.sep + r"Logs" + os.sep + time.strftime('%Y-%m-%d-%
 # LOG_LEVEL = logging.INFO
 LOG_LEVEL = logging.DEBUG
 logging.basicConfig(level=LOG_LEVEL,
-                    format='%(asctime)s %(message)s',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 logger = logging.getLogger('Linger')
