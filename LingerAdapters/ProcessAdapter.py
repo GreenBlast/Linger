@@ -27,7 +27,7 @@ class ProcessAdapter(lingerAdapters.LingerBaseAdapter):
         self.sleep_timeout = self.configuration.get("sleep_timeout", self.SLEEP_TIMEOUT_SECS_DEFAULT)
         self.kill_timeout = self.configuration.get("kill_timeout", self.KILL_TIMEOUT_SECS_DEFAULT)
 
-    def start(self):
+    def start_process(self):
         self.logger.info("Starting process:%s" % self.command)
         with self.lock:
             if self.process is None:
@@ -36,7 +36,7 @@ class ProcessAdapter(lingerAdapters.LingerBaseAdapter):
             if self.process is not None:
                 self.logger.info("Started process:%s success" % self.command)
         
-    def stop(self):
+    def stop_process(self):
         with self.lock:
             self.logger.info("killing process: %s" % self.command)
             if self.process is None:
@@ -68,8 +68,8 @@ class ProcessAdapter(lingerAdapters.LingerBaseAdapter):
     
     def restart(self):
         self.logger.info("restarting process:%s" % self.command)
-        self.stop()
-        self.start()
+        self.stop_process()
+        self.start_process()
 
     def stop_with_all_children(self):
         with self.lock:

@@ -12,7 +12,7 @@ class StopProcessAction(lingerActions.LingerBaseAction):
         return self.get_adapter_by_uuid(self.process_adapter)
 
     def act(self, configuration):
-        self.get_process_adapter().stop()
+        self.get_process_adapter().stop_process()
 
 class StopProcessActionFactory(lingerActions.LingerBaseActionFactory):
     """StopProcessActionFactory generates StopProcessAction instances"""

@@ -12,7 +12,7 @@ class StartProcessAction(lingerActions.LingerBaseAction):
         return self.get_adapter_by_uuid(self.process_adapter)
 
     def act(self, configuration):
-        self.get_process_adapter().start()
+        self.get_process_adapter().start_process()
 
 class StartProcessActionFactory(lingerActions.LingerBaseActionFactory):
     """StartProcessActionFactory generates StartProcessAction instances"""

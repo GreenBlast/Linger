@@ -8,6 +8,14 @@ class AdaptersManager(LingerBaseManager):
         self.configuration = configuration
         self.manager_type = "Adapters"
 
+    def start(self):
+        for adapter_instance_uuid, adapter_item in self.plugin_instances.iteritems():
+            adapter_item.start()
+
+    def stop(self):
+        for adapter_instance_uuid, adapter_item in self.plugin_instances.iteritems():
+            adapter_item.stop()
+
     def create_adapter(self, configuration):
         configuration_to_send = configuration.copy()
         configuration_to_send.update(self.configuration)

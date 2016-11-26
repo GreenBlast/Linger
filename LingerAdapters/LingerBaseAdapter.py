@@ -9,6 +9,12 @@ class LingerBaseAdapter(LingerItem):
 
     def send_message(self, subject, text):
         self.logger.info("Sending message with subject:{} message text:{}".format(subject, text))
+
+    def start(self):
+        pass
+
+    def stop(self):
+        pass
         
 class LingerBaseAdapterFactory(LingerPlugin):
     """Base adapter factory for linger"""
