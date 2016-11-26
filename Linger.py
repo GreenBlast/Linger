@@ -109,10 +109,12 @@ class Linger(object):
     def start(self):
         self.scheduler.start()
         self.keep_alive_job = self.scheduler.add_job(self.log_alive_task, 'interval', seconds=self.configuration['counter_keep_alive'])
+        self.adapters_manager.start()
         self.triggers_manager.start()
 
     def stop(self):
         self.triggers_manager.stop()
+        self.adapters_manager.stop()
         self.keep_alive_job.remove()
         self.scheduler.shutdown(wait=True)
 
