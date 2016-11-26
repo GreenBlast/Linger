@@ -52,6 +52,7 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 * StartACIfTempAction.py - Starts the Air conditioner by using RMBridgeAdapter if current temperature is above the given min temperature
 * StopACAction.py - Stops the Air conditioner by using RMBridgeAdapter
 * ToggleACStateAction.py - Toggles the Air conditioner in the RMBridgeAdapter
+* ShellCommandAction.py - Calls a command to be executed (using subprocess.call)
 
 ### Adapters
 
