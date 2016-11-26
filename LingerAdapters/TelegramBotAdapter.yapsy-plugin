@@ -1,0 +1,9 @@
+[Core]
+Name = TelegramBotAdapterFactory
+Module = TelegramBotAdapter
+   
+[Documentation]
+Description = TelegramBotAdapterFactory creating instances of TelegramBotAdapter, an adapter Which implements the logic of a telegram bot
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

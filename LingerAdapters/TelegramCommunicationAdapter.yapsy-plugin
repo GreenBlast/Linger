@@ -1,0 +1,9 @@
+[Core]
+Name = TelegramCommunicationAdapterFactory
+Module = TelegramCommunicationAdapter
+   
+[Documentation]
+Description = TelegramCommunicationAdapterFactory creating instances of TelegramCommunicationAdapter, an adapter Which implements the logic of subscribing a telegram chat for the bot messages
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

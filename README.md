@@ -36,6 +36,7 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 * PeriodicalTrigger.py – Calls its actions every given interval in seconds, using Linger scheduler
 * ThreadedPeriodicalTrigger.py – Creates a thread that calls an action every given interval in seconds
 * PeriodicalHumanlikeTrigger - Does actions periodically, but adds a random interval and not acting between given sleep times
+* TelegramFilterByCommandTrigger - Let's you give commands to a telegram bot to engage the given actions associated with the trigger
 
 ### Actions
 
@@ -62,3 +63,5 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 * LogAdapter.py - Adapter that write lines to the log
 * ProcessAdapter.py – Adapter that manages an instance of a process
 * RMBridgeAdapter.py - Adapter to communicate with [RMBridge](http://rm-bridge.fun2code.de/) Which sends commands to a [broadlink RMPro](http://www.ibroadlink.com/rmPro/)
+* TelegramBotAdapter.py – Adapter that manages a telegram bot using the Telegram bot api and a respective python library. To get auth token create your bot via [BotFather](https://telegram.me/BotFather) in telegram
+* TelegramCommunicationAdapter.py – Adapter that manages sending a message to chat via the bot adapter. A registration is needed via the given command.
