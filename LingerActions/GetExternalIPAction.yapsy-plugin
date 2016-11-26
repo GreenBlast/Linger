@@ -1,0 +1,9 @@
+[Core]
+Name = GetExternalIPActionFactory
+Module = GetExternalIPAction
+    
+[Documentation]
+Description = GetExternalIPActionFactory creating instances of GetExternalIPAction which replies the external IP got from the ip.jsontest.com
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
