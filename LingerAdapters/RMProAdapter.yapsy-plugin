@@ -1,0 +1,9 @@
+[Core]
+Name = RMProAdapterFactory
+Module = RMProAdapter
+    
+[Documentation]
+Description = RMProAdapterFactory creating instances of RMProAdapter which enables controling an RMPro device using a designated library
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
