@@ -5,3 +5,4 @@ Yapsy==1.11.223
 Flask==0.11.1
 psutil==4.3.1
 python-telegram-bot==5.2.0
+git+https://github.com/mjg59/python-broadlink@master#egg=broadlink==0.2
