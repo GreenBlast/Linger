@@ -76,4 +76,4 @@ class TelegramBotAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
 
         optional_fields +=[('authorized_users', ('array', 'string'))]
 
-        return (fields,optional_fields)
+        return (fields, optional_fields)

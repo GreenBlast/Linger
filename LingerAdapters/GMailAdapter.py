@@ -157,4 +157,4 @@ class GMailAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
                     ]
 
         optional_fields = [("recipient_email","string")]
-        return (fields,optional_fields)
+        return (fields, optional_fields)

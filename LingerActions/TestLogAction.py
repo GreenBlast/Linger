@@ -26,4 +26,4 @@ class TestLogActionFactory(lingerActions.LingerBaseActionFactory):
 
         fields += [('log_line','string')]
 
-        return (fields,optional_fields)
+        return (fields, optional_fields)

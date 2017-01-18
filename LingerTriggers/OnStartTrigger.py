@@ -45,4 +45,4 @@ class OnStartFactory(lingerTriggers.LingerBaseTriggerFactory):
     def get_fields(self):
         fields, optional_fields = super(OnStartFactory, self).get_fields()
 
-        return (fields,optional_fields)
+        return (fields, optional_fields)

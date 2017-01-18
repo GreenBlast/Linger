@@ -22,4 +22,4 @@ class ShutdownLingerActionFactory(lingerActions.LingerBaseActionFactory):
     def get_fields(self):
         fields, optional_fields = super(ShutdownLingerActionFactory, self).get_fields()
 
-        return (fields,optional_fields)
+        return (fields, optional_fields)

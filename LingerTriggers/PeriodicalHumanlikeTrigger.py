@@ -93,4 +93,4 @@ class PeriodicalHumanlikeTriggerFactory(lingerTriggers.LingerBaseTriggerFactory)
         ("sleep_time_start", "time"),
         ("sleep_time_end", "time")
         ]
-        return (fields,optional_fields)
+        return (fields, optional_fields)

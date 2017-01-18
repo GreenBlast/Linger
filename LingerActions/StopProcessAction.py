@@ -28,4 +28,4 @@ class StopProcessActionFactory(lingerActions.LingerBaseActionFactory):
 
         fields += [('process_adapter','uuid')]
 
-        return (fields,optional_fields)
+        return (fields, optional_fields)

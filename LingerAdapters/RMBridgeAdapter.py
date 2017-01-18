@@ -120,4 +120,4 @@ class RMBridgeAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     def get_fields(self):
         fields, optional_fields = super(RMBridgeAdapterFactory, self).get_fields()
         fields += [('rmbridge_ip',"string"), ('rmbridge_port',"integer"), ('rmpro_mac',"string")]
-        return (fields,optional_fields)
+        return (fields, optional_fields)

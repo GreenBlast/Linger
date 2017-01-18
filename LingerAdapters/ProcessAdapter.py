@@ -108,4 +108,4 @@ class ProcessAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
         fields, optional_fields = super(ProcessAdapterFactory, self).get_fields()
         fields += [("command","string")]
         optional_fields += [("kill_wait","float"),("sleep_timeout","float"),("kill_timeout","float")]
-        return (fields,optional_fields)
+        return (fields, optional_fields)

@@ -1,4 +1,3 @@
-import logging
 from LingerPlugin.LingerPlugin import LingerPlugin
 from LingerPlugin.LingerItem import LingerItem
 

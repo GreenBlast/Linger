@@ -72,4 +72,4 @@ class NewMailFilterByCommandTriggerFactory(lingerTriggers.LingerBaseTriggerFacto
                     ('subject_to_filter', 'string'),
                     ('authorized_keys', ('array', 'string'))]
 
-        return (fields,optional_fields)
+        return (fields, optional_fields)

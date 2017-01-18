@@ -22,4 +22,4 @@ class RestartLingerActionFactory(shutdownLingerAction.ShutdownLingerActionFactor
     def get_fields(self):
         fields, optional_fields = super(RestartLingerActionFactory, self).get_fields()
 
-        return (fields,optional_fields)
+        return (fields, optional_fields)

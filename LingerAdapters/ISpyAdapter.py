@@ -87,4 +87,4 @@ class ISpyAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     def get_fields(self):
         fields, optional_fields = super(ISpyAdapterFactory, self).get_fields()
         fields += [('ispy_ip',"string"), ('ispy_port',"integer")]
-        return (fields,optional_fields)
+        return (fields, optional_fields)

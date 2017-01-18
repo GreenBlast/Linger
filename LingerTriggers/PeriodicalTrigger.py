@@ -50,4 +50,4 @@ class PeriodicalTriggerFactory(lingerTriggers.LingerBaseTriggerFactory):
         fields, optional_fields = super(PeriodicalTriggerFactory, self).get_fields()
         fields +=[("intervalSec","float")]
         optional_fields +=[("should_trigger_on_start","boolean")]
-        return (fields,optional_fields)
+        return (fields, optional_fields)

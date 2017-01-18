@@ -81,4 +81,4 @@ class DirWatchTriggerFactory(lingerTriggers.LingerBaseTriggerFactory):
         fields += [("watched_path","string"),("dir_watch_adapter_uuid","Adapters")]
         optional_fields +=[("patterns","string"), ("ignored_patterns",['modified', 'created', 'moved', 'deleted']), ("allowed_trigger_types", ['modified', 'created', 'moved', 'deleted'])]
 
-        return (fields,optional_fields)
+        return (fields, optional_fields)

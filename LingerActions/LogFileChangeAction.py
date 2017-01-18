@@ -26,4 +26,4 @@ class LogFileChangeActionFactory(lingerActions.LingerBaseActionFactory):
     def get_fields(self):
         fields, optional_fields = super(LogFileChangeActionFactory, self).get_fields()
         fields += [("log_adapter_uuid","Adapters")]
-        return (fields,optional_fields)
+        return (fields, optional_fields)

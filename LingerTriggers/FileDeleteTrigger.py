@@ -95,4 +95,4 @@ class FileDeleteTriggerFactory(dirWatchTrigger.DirWatchTriggerFactory):
         fields, optional_fields = super(FileDeleteTriggerFactory, self).get_fields()
         fields += [("trigger_file_name","string")]
         optional_fields.remove(("allowed_trigger_types", ['modified', 'created', 'moved', 'deleted']));
-        return (fields,optional_fields)
+        return (fields, optional_fields)
