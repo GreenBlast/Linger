@@ -1,0 +1,9 @@
+[Core]
+Name = MQTTMessageFilterByCommandTriggerFactory
+Module = MQTTMessageFilterByCommandTrigger
+
+[Documentation]
+Description = MQTTMessageFilterByCommandTriggerFactory creating instances of MQTTMessageFilterByCommandTrigger which triggers by MQTT message and calls action with the label in the received mail
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

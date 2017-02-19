@@ -1,0 +1,9 @@
+[Core]
+Name = MQTTPublishActionFactory
+Module = MQTTPublishAction
+
+[Documentation]
+Description = MQTTPublishActionFactory creating instances of MQTTPublishAction which publishes a message to mqtt broker
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

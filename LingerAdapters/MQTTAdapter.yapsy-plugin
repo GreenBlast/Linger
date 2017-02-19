@@ -1,0 +1,9 @@
+[Core]
+Name = MQTTAdapterFactory
+Module = MQTTAdapter
+
+[Documentation]
+Description = MQTTAdapterFactory creating instances of MQTTAdapter, an adapter which implements communication with an MQTT broker
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

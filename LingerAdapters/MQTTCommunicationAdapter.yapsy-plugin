@@ -1,0 +1,9 @@
+[Core]
+Name = MQTTCommunicationAdapterFactory
+Module = MQTTCommunicationAdapter
+
+[Documentation]
+Description = MQTTCommunicationAdapterFactory creating instances of MQTTCommunicationAdapter, an adapter which implements publishing messages to an MQTT broker with a predefined topic
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
