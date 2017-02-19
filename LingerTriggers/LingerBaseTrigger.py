@@ -1,9 +1,11 @@
-import logging
+"""
+Base implementation of a trigger for Linger
+"""
 from LingerPlugin.LingerPlugin import LingerPlugin
 from LingerPlugin.LingerItem import LingerItem
 
 class LingerBaseTrigger(LingerItem):
-    """Base trigger for linger"""
+    """Base trigger for Linger"""
     def __init__(self, configuration):
         super(LingerBaseTrigger, self).__init__(configuration)
         self.trigger_callback = configuration['trigger_callback']
@@ -16,12 +18,21 @@ class LingerBaseTrigger(LingerItem):
         self.logger.debug("trigger_engaged, command is %s", command)
 
     def start(self):
+        """
+        Start watch for triggered events
+        """
         pass
 
     def stop(self):
+        """
+        Stop watch for triggered events
+        """
         pass
 
     def register_action(self, action):
+        """
+        Associate an action with the trigger
+        """
         self.actions[action.uuid] = action
 
 class LingerBaseTriggerFactory(LingerPlugin):
@@ -30,10 +41,6 @@ class LingerBaseTriggerFactory(LingerPlugin):
         super(LingerBaseTriggerFactory, self).__init__()
         self.item = LingerBaseTrigger
 
-    def get_instance(self, configuration):
-        return self.item(configuration)
-
     def get_fields(self):
         fields, optional_fields = super(LingerBaseTriggerFactory, self).get_fields()
         return (fields, optional_fields)
-

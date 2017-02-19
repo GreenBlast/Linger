@@ -1,9 +1,9 @@
 [Core]
 Name = NewMailFilterByCommandTriggerFactory
 Module = NewMailFilterByCommandTrigger
-    
+
 [Documentation]
-Description = NewMailFilterByCommandTriggerFactory creating instances of NewMailFilterByCommandTrigger Which periodically checks for new Emails
+Description = NewMailFilterByCommandTriggerFactory creating instances of NewMailFilterByCommandTrigger which triggers by mail and calls action with the label in the received mail
 Author = Greenblast
 Version = 1.0
 Website = https://github.com/greenblast/linger/

@@ -1,9 +1,9 @@
 [Core]
 Name = TelegramFilterByCommandTriggerFactory
 Module = TelegramFilterByCommandTrigger
-    
+
 [Documentation]
-Description = TelegramFilterByCommandTriggerFactory creating instances of TelegramFilterByCommandTrigger Which listen to commands from a telgram bot chat
+Description = TelegramFilterByCommandTriggerFactory creating instances of TelegramFilterByCommandTrigger which listen to commands from a telgram bot chat
 Author = Greenblast
 Version = 1.0
 Website = https://github.com/greenblast/linger/

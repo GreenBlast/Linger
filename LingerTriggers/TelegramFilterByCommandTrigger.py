@@ -73,10 +73,13 @@ class TelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
 
             elif command in self.actions_by_labels.keys():
                 update.message.reply_text(
-                    "Executing command: {}".format(command),
-                    reply_markup=self.markup)
+                    "Executing command: {}".format(command))
 
                 self.trigger_engaged(command)
+
+                update.message.reply_text(
+                    "Command: {} finished executing, ready for commands.".format(command),
+                    reply_markup=self.markup)
 
             return CHOOSING
 
