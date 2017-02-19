@@ -1,0 +1,9 @@
+[Core]
+Name = MultipleLingersTelegramFilterByCommandTriggerFactory
+Module = MultipleLingersTelegramFilterByCommandTrigger
+
+[Documentation]
+Description = MultipleLingersTelegramFilterByCommandTriggerFactory creating instances of MultipleLingersTelegramFilterByCommandTrigger which is a telgram bot chat handlers to control multiple Lingers
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

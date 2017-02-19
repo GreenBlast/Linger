@@ -23,7 +23,7 @@ Well, Linger is a side project I'm working on, and while working on it, I wanted
 Linger is seperated to 3 major item types: Triggers, Actions and Adapters.
 Triggers, are conditions that when met would call the actions associated with them.
 Actions, are pieces of code that would be called by the triggers to do stuff.
-Adapters, are pieces of code that do stuff, they are seprated because they are here to be used by triggers, actions, and adapters. 
+Adapters, are pieces of code that do stuff, they are seprated because they are here to be used by triggers, actions, and adapters.
 
 ## What Triggers, Actions, and Adapters are there?
 
@@ -31,13 +31,14 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 
 * DirWatchTrigger.py - Watches a directory for changes and calls it's actions when there is one
 * FileDeleteTrigger.py - Creates a file, and triggers when it's deleted. Creating the file again afterwards
-* NewMailFilterByCommandTrigger.py – Wait for a mail with a given subject to arrive, and calls the action with the label in the mail 
+* NewMailFilterByCommandTrigger.py – Wait for a mail with a given subject to arrive, and calls the action with the label in the mail
 * OnStartTrigger.py – Calls its actions 5 seconds after Linger is up
 * PeriodicalTrigger.py – Calls its actions every given interval in seconds, using Linger scheduler
 * ThreadedPeriodicalTrigger.py – Creates a thread that calls an action every given interval in seconds
-* PeriodicalHumanlikeTrigger - Does actions periodically, but adds a random interval and not acting between given sleep times
-* TelegramFilterByCommandTrigger - Let's you give commands to a telegram bot to engage the given actions associated with the trigger
-
+* PeriodicalHumanlikeTrigger.py - Does actions periodically, but adds a random interval and not acting between given sleep times
+* TelegramFilterByCommandTrigger.py - Let's you give commands to a telegram bot to engage the given actions associated with the trigger
+* MQTTMessageFilterByCommandTrigger.py - Triggers by a message received from an MQTT broker to engage given action associated with the trigger
+* MultipleLingersTelegramFilterByCommandTrigger - A telegram trigger that enables controlling more than one Linger instances (by two stages, send an MQTT message that gets in response a list of available commands of an MQTT trigger in another Linger)
 ### Actions
 
 * GetGrabAndSendMailAction.py – Takes a snapshot using an [ispy](https://www.ispyconnect.com) adapter, and sending it to a Mail recipient
@@ -54,7 +55,8 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 * StopACAction.py - Stops the Air conditioner by using RMBridgeAdapter
 * ToggleACStateAction.py - Toggles the Air conditioner in the RMBridgeAdapter
 * ShellCommandAction.py - Calls a command to be executed (using subprocess.call)
-
+* MQTTPublishAction.py - Publishes a message on an MQTT broker
+* TriggerLabelsSendAction.py - Sends a list of labels of actions associated with a trigger, to be used with MultipleLingersTelegramFilterByCommandTrigger
 ### Adapters
 
 * DirWatchAdapter.py - Adapter that uses python-watchdog to watch over directory changes, most of the time there should be only one active, because it can handle more than one directory for each instance
@@ -65,3 +67,5 @@ Adapters, are pieces of code that do stuff, they are seprated because they are h
 * RMBridgeAdapter.py - Adapter to communicate with [RMBridge](http://rm-bridge.fun2code.de/) Which sends commands to a [broadlink RMPro](http://www.ibroadlink.com/rmPro/)
 * TelegramBotAdapter.py – Adapter that manages a telegram bot using the Telegram bot api and a respective python library. To get auth token create your bot via [BotFather](https://telegram.me/BotFather) in telegram
 * TelegramCommunicationAdapter.py – Adapter that manages sending a message to chat via the bot adapter. A registration is needed via the given command.
+* MQTTAdapter.py - Adapter which manages MQTT client communication
+* MQTTCommunicationAdapter.py - Adapter which manages sending MQTT messagas with a predefined topic

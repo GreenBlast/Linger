@@ -1,0 +1,9 @@
+[Core]
+Name = TriggerLabelsSendActionFactory
+Module = TriggerLabelsSendAction
+
+[Documentation]
+Description = TriggerLabelsSendActionFactory creating instances of TriggerLabelsSendAction which sends a message containing the list of labels associated with a trigger
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
