@@ -52,9 +52,10 @@ class TelegramCommunicationAdapter(lingerAdapters.LingerBaseAdapter):
             except KeyError:
                 self.logger.warning("Tried to remove unsubscribed chat_id: %s", update.message.chat_id)
 
-    def send_message(self, subject, text):
+    def send_message(self, subject, text, **kwargs):
         for chat_id in self.chat_set:
-            self.telegram_bot_adapter().send_telegram_message(chat_id, subject, text)
+            self.telegram_bot_adapter().send_telegram_message(chat_id, subject, text, kwargs.get("image_path", None))
+
 
     def cleanup(self):
         try:

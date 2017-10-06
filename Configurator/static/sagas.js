@@ -15,7 +15,6 @@ import { SAVE_CONFIGURATION_TO_SERVER } from './actionTypes'
 // Selector for linger state
 export const getLingerConfiguration = (state) => state.Linger
 
-// TODO IP would change, probably should be localhost
 const getConfApi = (address) => {
 	return axios.get("http://" + address + "/api/get_configuration");
 }

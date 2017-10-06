@@ -1,3 +1,4 @@
 *.pyc
 Configurator/static/node_modules/
 Configurator/node_modules/
+.idea/

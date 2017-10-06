@@ -12,10 +12,12 @@ import LingerTriggers.LingerBaseTrigger as lingerTriggers
 
 CHOOSING = 1
 
+
 class TelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
     """Trigger that engaged when a new mail is recieved thread"""
 
     DEFAULT_END_PHRASE = "Done"
+
     def __init__(self, configuration):
         super(TelegramFilterByCommandTrigger, self).__init__(configuration)
         self.actions_by_labels = defaultdict(list)
@@ -41,7 +43,6 @@ class TelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
         )
 
         # Optional fields
-
 
         self.logger.debug("TelegramFilterByCommandTrigger initialized")
 
@@ -86,7 +87,6 @@ class TelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
         else:
             return ConversationHandler.END
 
-
     def trigger_engaged(self, command=None):
         trigger_data = {}
         for action in self.actions_by_labels[command]:
@@ -113,6 +113,7 @@ class TelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
         self.actions_by_labels[action.label] += [action]
         self.commands += [action.label]
 
+
 class TelegramFilterByCommandTriggerFactory(lingerTriggers.LingerBaseTriggerFactory):
     """TelegramFilterByCommandTriggerFactory generates TelegramFilterByCommandTrigger instances"""
     def __init__(self):
@@ -131,4 +132,4 @@ class TelegramFilterByCommandTriggerFactory(lingerTriggers.LingerBaseTriggerFact
                    ('command_word', 'string'),
                    ('authorized_users', ('array', 'string'))]
 
-        return (fields, optional_fields)
+        return fields, optional_fields

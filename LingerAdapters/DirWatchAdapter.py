@@ -9,16 +9,14 @@ import logging
 
 class DirWatchEventHandler(FileSystemEventHandler):
     """Event handler for observers manged by the DirWatchAdapter"""
-    def __init__(self, callback):
+    def __init__(self, callback, logger):
         super(DirWatchEventHandler, self).__init__()
-        # TODO Need to create a handler that would get this from the object that creates it
-        self.logger = logging.getLogger('Linger')
+        self.logger = logger
         self.callback = callback
 
 
     def on_deleted(self, event):
         """Some file changed"""
-        # TODO print for testing purposes, delete later
         self.logger.debug("on_deleted called")
         self.callback(event)
     
@@ -50,11 +48,11 @@ class DirWatchAdapter(lingerAdapters.LingerBaseAdapter):
     def add_dir_to_watch(self, callback, path_to_watch):
         # Getting absolute path
         absolute_path_to_watch = os.path.abspath(path_to_watch)
+
         # TODO need here to make sure is dir. or someplace else
         # Create new event handler for the watch 
-        event_handler = DirWatchEventHandler(callback)
+        event_handler = DirWatchEventHandler(callback, self.logger)
 
-        # TODO maybe later change recursiveness to optional
         # Schedule for observer
         return self.observer.schedule(event_handler, absolute_path_to_watch, recursive=False)
 

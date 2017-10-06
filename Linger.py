@@ -140,7 +140,6 @@ class Linger(object):
         """
         Setting Linger to stop loop and shutdown
         """
-        # TODO can add here check for credentials if allowed to call it
         self.should_loop = False
 
     def set_should_restart(self, flag):

@@ -18,7 +18,7 @@ class MQTTPublishAction(lingerActions.LingerBaseAction):
         # Optional Fields
         self.timeout = int(configuration.get("timeout", self.DEFAULT_TIMEOUT))
 
-        self.answer_event = threading.Event()
+        self.answer_events = {}
         self.received_info = None
 
     def mqtt_adapter(self):
@@ -32,7 +32,9 @@ class MQTTPublishAction(lingerActions.LingerBaseAction):
         Callback function for the returning answer
         """
         self.received_info = payload
-        self.answer_event.set()
+        subscribed_event = self.answer_events.get(topic, None)
+        if subscribed_event:
+            subscribed_event.set()
 
     def act(self, configuration=None):
         if configuration:
@@ -40,7 +42,8 @@ class MQTTPublishAction(lingerActions.LingerBaseAction):
                 self.mqtt_adapter().subscribe(configuration["trigger_label"], self.callback)
                 self.mqtt_adapter().publish_mqtt_message(self.topic, self.message)
 
-                wait_result = self.answer_event.wait(self.timeout)
+                self.answer_events[configuration["trigger_label"]] = threading.Event()
+                wait_result = self.answer_events[configuration["trigger_label"]].wait(self.DEFAULT_TIMEOUT)
                 self.mqtt_adapter().unsubscribe(configuration["trigger_label"], self.callback)
 
                 if not wait_result:
@@ -61,7 +64,8 @@ class MQTTPublishActionFactory(lingerActions.LingerBaseActionFactory):
         super(MQTTPublishActionFactory, self).__init__()
         self.item = MQTTPublishAction
 
-    def get_instance_name(self):
+    @staticmethod
+    def get_instance_name():
         return "MQTTPublishAction"
 
     def get_fields(self):

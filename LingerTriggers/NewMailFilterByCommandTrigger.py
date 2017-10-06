@@ -9,6 +9,7 @@ import ast
 
 import LingerTriggers.LingerBaseTrigger as lingerTriggers
 
+
 class NewMailFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
     """
     Trigger that engaged when a new mail is recieved
@@ -58,7 +59,7 @@ class NewMailFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
         self.logger.info("command string is: {%s}", ",".join(["\"{}\":\"{}\"".format(x, x) for x in self.actions_by_labels.keys()]))
 
     def stop(self):
-        if self.subscription_id != None:
+        if self.subscription_id is not None:
             self.mail_adapter().unsubscribe(self.subscription_id)
 
         self.subscription_id = None
@@ -66,6 +67,7 @@ class NewMailFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
     def register_action(self, action):
         super(NewMailFilterByCommandTrigger, self).register_action(action)
         self.actions_by_labels[action.label] += [action]
+
 
 class NewMailFilterByCommandTriggerFactory(lingerTriggers.LingerBaseTriggerFactory):
     """NewMailFilterByCommandTriggerFactory generates NewMailFilterByCommandTrigger instances"""

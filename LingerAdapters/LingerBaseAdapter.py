@@ -10,7 +10,7 @@ class LingerBaseAdapter(LingerItem):
     def __init__(self, configuration):
         super(LingerBaseAdapter, self).__init__(configuration)
 
-    def send_message(self, subject, text):
+    def send_message(self, subject, text, **kwargs):
         """
         Generic sending a message via the adapter
         """

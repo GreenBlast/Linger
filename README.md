@@ -1,4 +1,4 @@
-# Linger
+# Linger - write your automation trigger
 Linger is a trigger to action configurable platform, written in Python
 
 ## What does it do?

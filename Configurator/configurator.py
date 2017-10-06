@@ -1,12 +1,12 @@
 # Imports
 import os
 import sys
-# Adding current directory to the path 
-sys.path.append(os.getcwd())
-
 from flask import Flask, request, render_template, Response
 import json
 import uuid
+
+# Adding current directory to the path
+sys.path.append(os.getcwd())
 
 # Linger imports
 from LingerManagers.AdaptersManager import AdaptersManager
@@ -31,12 +31,14 @@ CONFIG_FILE = 'Linger.config'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+
 # Helper methods
 def get_configuration():
     with open(CONFIG_FILE, 'r') as f:
         returned_branch = json.loads(f.read())
 
     return returned_branch
+
 
 def set_configuration(configuration):
     with open(CONFIG_FILE, 'w') as fw:

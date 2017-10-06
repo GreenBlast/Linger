@@ -12,6 +12,7 @@ import re
 import uuid
 import os
 
+
 class GMailAdapter(lingerAdapters.LingerBaseAdapter):
     """GMailAdapter ables sending mails"""
 
@@ -27,22 +28,21 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
         self._gmail_user = self.configuration["gmail_user"]
         self._gmail_password = self.configuration["gmail_password"]
         self.interval = float(self.configuration["intervalSec"])
+        self.imap_server = None
+        self.last_uid = None
 
         # optional_fields
-        self.recipient_email =  self.configuration.get("recipient_email", self._gmail_user)
+        self.recipient_email = self.configuration.get("recipient_email", self._gmail_user)
         
         self.logger.info("GMailAdapter configured with user=%s" % (self._gmail_user,))
 
-
-
     def connect_to_imap_server(self):
-        self.imap_server = imaplib.IMAP4_SSL("imap.gmail.com",993)
+        self.imap_server = imaplib.IMAP4_SSL("imap.gmail.com", 993)
         self.imap_server.login(self._gmail_user, self._gmail_password)
 
     def disconnect_from_imap_server(self):
-        self.imap_server().close()
-        self.imap_server().logout()
-
+        self.imap_server.close()
+        self.imap_server.logout()
 
     def subscribe_for_new_mails(self, callback):
         subscription_uuid = uuid.uuid4()
@@ -84,10 +84,10 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
     def monitor_new_mails(self):
         update_uid_flag = False
         try:
-            _, last_message  = self.imap_server.select('INBOX')
+            _, last_message = self.imap_server.select('INBOX')
         except Exception, e:
             self.connect_to_imap_server()
-            _, last_message  = self.imap_server.select('INBOX')
+            _, last_message = self.imap_server.select('INBOX')
 
         result, data = self.imap_server.uid('search', None, 'UID', self.last_uid + ':*')
         messages = data[0].split()
@@ -104,14 +104,14 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
 
         if update_uid_flag:
             self.last_uid = self.get_last_uid()
-            update_uid_flag = False
+            # TODO should remove this?
+            #update_uid_flag = False
 
         for mail in mail_list:
             for subscriber_callback in self.subscribers_dict.itervalues():
                 subscriber_callback(email.message_from_string(mail))
 
-
-    def send_mail(self, to, subject, text, attach_image_path = None):
+    def send_mail(self, to, subject, text, attach_image_path=None):
         message = MIMEMultipart()
 
         message['From'] = self._gmail_user
@@ -128,33 +128,34 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
                                   'attachment; filename="%s"' % os.path.basename(attach_image_path))
             message.attach(image_part)
             
-        mailServer = smtplib.SMTP("smtp.gmail.com", 587)
-        mailServer.ehlo()
-        mailServer.starttls()
-        mailServer.ehlo()
-        mailServer.login(self._gmail_user, self._gmail_password)
-        mailServer.sendmail(self._gmail_user, to, message.as_string())
-        mailServer.quit()
+        mail_server = smtplib.SMTP("smtp.gmail.com", 587)
+        mail_server.ehlo()
+        mail_server.starttls()
+        mail_server.ehlo()
+        mail_server.login(self._gmail_user, self._gmail_password)
+        mail_server.sendmail(self._gmail_user, to, message.as_string())
+        mail_server.quit()
 
-    def send_message(self, subject, text):
-            self.send_mail(self.recipient_email, subject, text)
+    def send_message(self, subject, text, **kwargs):
+            self.send_mail(self.recipient_email, subject, text, kwargs.get("image_path", None))
+
 
 class GMailAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     """GMailAdapterFactory generates GMailAdapter instances"""
     def __init__(self):
         super(GMailAdapterFactory, self).__init__()
         self.item = GMailAdapter 
-    
-    def get_instance_name(self):
+
+    @staticmethod
+    def get_instance_name():
         return "GMailAdapter"
 
     def get_fields(self):
         fields, optional_fields = super(GMailAdapterFactory, self).get_fields()
 
-        fields += [('gmail_user',"string"),
-                    ('gmail_password',"string"),
-                    ("intervalSec","float"),
-                    ]
+        fields += [('gmail_user', "string"),
+                   ('gmail_password', "string"),
+                   ("intervalSec", "float")]
 
-        optional_fields = [("recipient_email","string")]
-        return (fields, optional_fields)
+        optional_fields = [("recipient_email", "string")]
+        return fields, optional_fields

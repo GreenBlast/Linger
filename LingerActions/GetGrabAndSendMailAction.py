@@ -18,7 +18,7 @@ class GetGrabAndSendMailAction(lingerActions.LingerBaseAction):
         # Fields
         self.local_ispy_adapter = configuration["local_ispy_adapter"]
         self.remote_ispy_adapter = configuration["remote_ispy_adapter"]
-        self.mail_adapter = configuration["mail_adapter"]
+        self.communication_adapter = configuration["communication_adapter"]
         self.snapshots_location = configuration["snapshots_location"]
         self.mail_recipient = configuration["mail_recipient"] 
 
@@ -32,25 +32,22 @@ class GetGrabAndSendMailAction(lingerActions.LingerBaseAction):
     def get_remote_ispy_adapter(self):
         return self.get_adapter_by_uuid(self.remote_ispy_adapter)
 
-    def get_mail_adapter(self):
-        return self.get_adapter_by_uuid(self.mail_adapter)
+    def get_communication_adapter(self):
+        return self.get_adapter_by_uuid(self.communication_adapter)
 
     def _find_last_picture(self):
-    	return max(glob.iglob(os.path.join(self.snapshots_location, "*.jpg")), key = os.path.getctime)
+        return max(glob.iglob(os.path.join(self.snapshots_location, "*.jpg")), key=os.path.getctime)
 
     def wait_for_camera_online(self):
-    	time.sleep(self.CAMERA_ONLINE_TIMEOUT)
+        time.sleep(self.CAMERA_ONLINE_TIMEOUT)
 
     def act(self, configuration=None):
-    	self.get_remote_ispy_adapter().cam_on()
-    	self.wait_for_camera_online()
+        self.get_remote_ispy_adapter().cam_on()
+        self.wait_for_camera_online()
 
-    	self.get_local_ispy_adapter().grab_snapshot()
-    	picture_path = self._find_last_picture()
-    	self.get_mail_adapter().send_mail(self.mail_recipient,
-    								 self.mail_subject,
-    								 self.mail_text,
-    								 picture_path)
+        self.get_local_ispy_adapter().grab_snapshot()
+        picture_path = self._find_last_picture()
+        self.get_communication_adapter().send_message(self.mail_recipient, self.mail_subject, image_path=picture_path)
 
 
 
@@ -60,20 +57,20 @@ class GetGrabAndSendMailActionFactory(lingerActions.LingerBaseActionFactory):
         super(GetGrabAndSendMailActionFactory, self).__init__()
         self.item = GetGrabAndSendMailAction
 
-    def get_instance_name(self):
+    @staticmethod
+    def get_instance_name():
         return "GetGrabAndSendMailAction"
 
     def get_fields(self):
         fields, optional_fields = super(GetGrabAndSendMailActionFactory, self).get_fields()
         
-        fields += [("remote_ispy_adapter" , "uuid"),
-        ("local_ispy_adapter" , "uuid"),
-        ("mail_adapter" , "uuid"),
-        ("mail_recipient", "string"),
-        ("snapshots_location", "string")]
+        fields += [("remote_ispy_adapter", "uuid"),
+                   ("local_ispy_adapter", "uuid"),
+                   ("communication_adapter", "uuid"),
+                   ("mail_recipient", "string"),
+                   ("snapshots_location", "string")]
 
-        optional_fields += [
-        ("mail_text", "string"),
-        ("mail_subject", "string")
-        ]
-        return (fields, optional_fields)
+        optional_fields += [("mail_text", "string"),
+                            ("mail_subject", "string")]
+
+        return fields, optional_fields

@@ -4,6 +4,7 @@ import LingerTriggers.LingerBaseTrigger as lingerTriggers
 from datetime import datetime, timedelta
 from apscheduler.jobstores.base import JobLookupError
 
+
 class OnStart(lingerTriggers.LingerBaseTrigger):
     """
         Trigger that is doing an action on startup
@@ -22,16 +23,16 @@ class OnStart(lingerTriggers.LingerBaseTrigger):
         self.trigger_callback(self.uuid, event_details)
 
     def start(self):
-    	if self.is_started == False:
-    		self.is_started = True
-	        self.scheduled_job = self.scheduler.add_job(self.trigger_engaged,'date', run_date=datetime.now() + timedelta(0,5))
+        if not self.is_started:
+            self.is_started = True
+            self.scheduled_job = self.scheduler.add_job(self.trigger_engaged,'date', run_date=datetime.now() + timedelta(0, 5))
 
     def stop(self):
         if self.scheduled_job != None:
-        	try:
-	            self.scheduled_job.remove()
-        	except JobLookupError, e:
-        		pass
+            try:
+                self.scheduled_job.remove()
+            except JobLookupError, e:
+                pass
 
 class OnStartFactory(lingerTriggers.LingerBaseTriggerFactory):
     """OnStartFactory generates OnStart instances"""

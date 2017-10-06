@@ -50,7 +50,6 @@ class TelegramBotAdapter(lingerAdapters.LingerBaseAdapter):
         """
         self.logger.warning('Update "%s" caused error "%s"', update, error)
 
-
     def add_handler(self, handler):
         """
         Adding handler to the dispatcher
@@ -63,20 +62,26 @@ class TelegramBotAdapter(lingerAdapters.LingerBaseAdapter):
         """
         self.dispatcher.remove_handler(handler)
 
-    def send_telegram_message(self, chat_id, subject, text):
+    def send_telegram_message(self, chat_id, subject, text, image_path=None):
         """
         Sending a message to the subscribers
         """
-        # Formatting message
-        message = "<b>{subject}</b>\n{text}".format(subject=subject, text=text)
-
-        self.updater.bot.send_message(chat_id=chat_id,
-                                      text=message,
-                                      parse_mode=telegram.ParseMode.HTML)
+        if image_path:
+            message = "{subject}\n{text}".format(subject=subject, text=text)
+            try:
+                self.updater.bot.send_photo(chat_id=chat_id, text=message, photo=open(image_path, 'rb'))
+            except IOError, e:
+                self.logger.exception(e)
+                self.logger.info("Failed opening photo")
+        else:
+            # Formatting message
+            message = "<b>{subject}</b>\n{text}".format(subject=subject, text=text)
+            self.updater.bot.send_message(chat_id=chat_id, text=message, parse_mode=telegram.ParseMode.HTML)
 
     def cleanup(self):
         if self.updater.running:
             self.updater.stop()
+
 
 class TelegramBotAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     """TelegramBotAdapterFactory generates TelegramBotAdapter instances"""
@@ -96,4 +101,4 @@ class TelegramBotAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
 
         optional_fields += [('authorized_users', ('array', 'string'))]
 
-        return (fields, optional_fields)
+        return fields, optional_fields
