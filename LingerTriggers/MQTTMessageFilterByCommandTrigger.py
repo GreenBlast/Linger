@@ -2,12 +2,16 @@
 MQTTMessageFilterByCommandTrigger triggers by MQTT message and calls action with the label in the received mail
 """
 # Operation specific imports
+import json
 from collections import defaultdict
 
+import LingerConstants
 import LingerTriggers.LingerBaseTrigger as lingerTriggers
+
 
 class MQTTMessageFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
     """Trigger that engaged when a message is recieved thread"""
+
     def __init__(self, configuration):
         super(MQTTMessageFilterByCommandTrigger, self).__init__(configuration)
         self.subscription_id = None
@@ -30,12 +34,22 @@ class MQTTMessageFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
         Checking if trigger should call action
         """
         self.logger.debug("Got message with topic: %s payload is: %s", topic, payload)
-        self.trigger_engaged(payload)
+        data = {}
+        try:
+            data = json.loads(payload.decode("utf-8"))
+        except ValueError:
+            data['payload'] = payload
+            pass
 
-    def trigger_engaged(self, command): # Command shouldn't be None pylint: disable=w0222
-        trigger_data = {}
-        for action in self.actions_by_labels[command]:
-            self.trigger_specific_action_callback(self.uuid, action.uuid, trigger_data)
+        data['topic'] = topic
+        self.trigger_engaged(data)
+
+    def trigger_engaged(self, data=None):
+        if LingerConstants.COMMAND_NAME in data:
+            command_label = data[LingerConstants.COMMAND_NAME]
+            if command_label in self.actions_by_labels:
+                for action in self.actions_by_labels[command_label]:
+                    self.trigger_specific_action_callback(self.uuid, action.uuid, data)
 
     def start(self):
         self.mqtt_adapter().subscribe(self.topic, self.trigger_check_condition)
@@ -48,8 +62,10 @@ class MQTTMessageFilterByCommandTrigger(lingerTriggers.LingerBaseTrigger):
         super(MQTTMessageFilterByCommandTrigger, self).register_action(action)
         self.actions_by_labels[action.label] += [action]
 
+
 class MQTTMessageFilterByCommandTriggerFactory(lingerTriggers.LingerBaseTriggerFactory):
     """MQTTMessageFilterByCommandTriggerFactory generates MQTTMessageFilterByCommandTrigger instances"""
+
     def __init__(self):
         super(MQTTMessageFilterByCommandTriggerFactory, self).__init__()
         self.item = MQTTMessageFilterByCommandTrigger
@@ -65,4 +81,4 @@ class MQTTMessageFilterByCommandTriggerFactory(lingerTriggers.LingerBaseTriggerF
         fields += [('mqtt_adapter', 'uuid'),
                    ('topic', 'string')]
 
-        return (fields, optional_fields)
+        return fields, optional_fields

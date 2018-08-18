@@ -1,3 +1,6 @@
+import ast
+
+import LingerConstants
 import LingerTriggers.LingerBaseTrigger as lingerTriggers
 
 # Operation specific imports
@@ -12,9 +15,9 @@ class WatchedPathNotADirectoryException(Exception):
 
 class DirWatchTrigger(lingerTriggers.LingerBaseTrigger):
     """Trigger watches for changes in a directory"""
-    PATTERNS_DEFAULT = [r"*.*"]
-    IGNORED_PATTERNS_DEFAULT = []
-    ALLOWED_TRIGGER_TYPES_DEFAULT = ['modified', 'created', 'moved', 'deleted']
+    PATTERNS_DEFAULT = r"""["*.*"]"""
+    IGNORED_PATTERNS_DEFAULT = """[]"""
+    ALLOWED_TRIGGER_TYPES_DEFAULT = "[\'modified\', \'created\', \'moved\', \'deleted\']"
 
     def __init__(self, configuration):
         super(DirWatchTrigger, self).__init__(configuration)
@@ -23,15 +26,16 @@ class DirWatchTrigger(lingerTriggers.LingerBaseTrigger):
         self.dir_watch_adapter_uuid = self.configuration["dir_watch_adapter_uuid"]
         # Checks if really a directory
         self.watched_path = os.path.abspath(self.configuration["watched_path"])
-        
+
         if os.path.isdir(self.watched_path) is not True: 
             raise WatchedPathNotADirectoryException(self.watched_path)
         
         # Optional fields
-        self.patterns = self.configuration.get("patterns", self.PATTERNS_DEFAULT)
-        self.ignored_patterns = self.configuration.get("ignored_patterns", self.IGNORED_PATTERNS_DEFAULT)
-        self.allowed_trigger_types = self.configuration.get("allowed_trigger_types", self.ALLOWED_TRIGGER_TYPES_DEFAULT)
-        
+        self.patterns = ast.literal_eval(self.configuration.get("patterns", self.PATTERNS_DEFAULT))
+        self.ignored_patterns = ast.literal_eval(self.configuration.get("ignored_patterns", self.IGNORED_PATTERNS_DEFAULT))
+        self.allowed_trigger_types = ast.literal_eval(self.configuration.get("allowed_trigger_types", self.ALLOWED_TRIGGER_TYPES_DEFAULT))
+        self.trigger_additional_data = self.configuration.get("trigger_additional_data", None)
+
         self.watch = None
         self.logger.debug("DirWatchTrigger started")
 
@@ -44,7 +48,7 @@ class DirWatchTrigger(lingerTriggers.LingerBaseTrigger):
     def stop(self):
         try:
             self.dir_watch_adapter().remove_dir_to_watch(self.watch)
-        except Exception, e:
+        except Exception as e:
             self.logger.error(e)
 
     def trigger_engaged(self, command=None):
@@ -53,6 +57,7 @@ class DirWatchTrigger(lingerTriggers.LingerBaseTrigger):
         event_details = command
         self.logger.debug("DirWatchTrigger callback_called")
         self.logger.debug("event type is:%s allowed types:%s" % (event_details.event_type, self.allowed_trigger_types,))
+        # TODO Add Resetting sleep status - don't send everything, have a cool down timer
         if event_details.event_type in self.allowed_trigger_types:
             # Check if the path matches the given patterns 
             self.logger.debug("event is in allowed types")
@@ -61,7 +66,7 @@ class DirWatchTrigger(lingerTriggers.LingerBaseTrigger):
             if event_matches_path is True:
                 trigger_data = {"event_type": event_details.event_type,
                                 "is_directory": event_details.is_directory,
-                                "src_path": event_details.src_path}
+                                LingerConstants.FILE_PATH_SRC: event_details.src_path}
                 self.trigger_callback(self.uuid, trigger_data)
 
         # Else, do nothing, this trigger is not for us
@@ -80,6 +85,10 @@ class DirWatchTriggerFactory(lingerTriggers.LingerBaseTriggerFactory):
     def get_fields(self):
         fields, optional_fields = super(DirWatchTriggerFactory, self).get_fields()
         fields += [("watched_path", "string"), ("dir_watch_adapter_uuid", "Adapters")]
-        optional_fields +=[("patterns", "string"), ("ignored_patterns", ['modified', 'created', 'moved', 'deleted']), ("allowed_trigger_types", ['modified', 'created', 'moved', 'deleted'])]
+        optional_fields += [("patterns", ('array', 'string')),
+                            ("ignored_patterns", ('array', 'string')),
+                            ("allowed_trigger_types", ['modified', 'created', 'moved', 'deleted']),
+                            ("trigger_additional_data", "string")
+                            ]
 
         return fields, optional_fields

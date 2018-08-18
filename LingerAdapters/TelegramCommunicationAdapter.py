@@ -25,7 +25,6 @@ class TelegramCommunicationAdapter(lingerAdapters.LingerBaseAdapter):
         # TODO this should be already a list in the configuration system
         self.authorized_users = ast.literal_eval(configuration["authorized_users"])
 
-
         self.chat_set = set()
 
         self.subscribe_handler = CommandHandler(self.subscribe_chat_command, self.subscribe)
@@ -54,7 +53,7 @@ class TelegramCommunicationAdapter(lingerAdapters.LingerBaseAdapter):
 
     def send_message(self, subject, text, **kwargs):
         for chat_id in self.chat_set:
-            self.telegram_bot_adapter().send_telegram_message(chat_id, subject, text, kwargs.get("image_path", None))
+            self.telegram_bot_adapter().send_telegram_message(chat_id, subject, text, **kwargs)
 
 
     def cleanup(self):

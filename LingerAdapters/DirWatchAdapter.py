@@ -59,7 +59,7 @@ class DirWatchAdapter(lingerAdapters.LingerBaseAdapter):
     def remove_dir_to_watch(self, watch):
         try:
             self.observer.unschedule(watch)
-        except Exception, e:
+        except Exception as e:
             self.logger.error(e)
 
     def __del__(self):

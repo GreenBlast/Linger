@@ -1,3 +1,4 @@
+from future.utils import iteritems
 from LingerManagers.LingerBaseManager import LingerBaseManager
 
 class AdaptersManager(LingerBaseManager):
@@ -9,11 +10,11 @@ class AdaptersManager(LingerBaseManager):
         self.manager_type = "Adapters"
 
     def start(self):
-        for adapter_instance_uuid, adapter_item in self.plugin_instances.iteritems():
+        for adapter_instance_uuid, adapter_item in iteritems(self.plugin_instances):
             adapter_item.start()
 
     def stop(self):
-        for adapter_instance_uuid, adapter_item in self.plugin_instances.iteritems():
+        for adapter_instance_uuid, adapter_item in iteritems(self.plugin_instances):
             adapter_item.stop()
 
     def create_adapter(self, configuration):

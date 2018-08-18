@@ -31,7 +31,7 @@ class OnStart(lingerTriggers.LingerBaseTrigger):
         if self.scheduled_job != None:
             try:
                 self.scheduled_job.remove()
-            except JobLookupError, e:
+            except JobLookupError as e:
                 pass
 
 class OnStartFactory(lingerTriggers.LingerBaseTriggerFactory):

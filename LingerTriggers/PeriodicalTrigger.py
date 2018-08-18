@@ -22,14 +22,13 @@ class PeriodicalTrigger(lingerTriggers.LingerBaseTrigger):
     def trigger_check_condition(self):
         self.logger.debug("trigger_check_condition called")
         self.trigger_engaged()
-        self.scheduled_job = self.scheduler.add_job(self.trigger_check_condition, 'interval', seconds=self.interval)
-                        
+
     def trigger_engaged(self, event_details=None):
         self.trigger_callback(self.uuid, event_details)
 
     def start(self):
         if self.should_trigger_on_start:
-            self.scheduled_job = self.scheduler.add_job(self.trigger_check_condition,'date', run_date=datetime.now() + timedelta(0,5))
+            self.scheduled_job = self.scheduler.add_job(self.trigger_check_condition, 'date', run_date=datetime.now() + timedelta(0,5))
         else:
             self.scheduled_job = self.scheduler.add_job(self.trigger_check_condition, 'interval', seconds=self.interval)
 

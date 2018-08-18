@@ -1,5 +1,6 @@
 import LingerActions.LingerBaseAction as lingerActions
 
+
 class TestLogAction(lingerActions.LingerBaseAction):
     """Logging that there was a change in a file"""
     def __init__(self, configuration):
@@ -8,9 +9,12 @@ class TestLogAction(lingerActions.LingerBaseAction):
         # Fields
         self.log_line = self.configuration['log_line']
 
-    def act(self, configuration):
+    def act(self, configuration=None):
         self.logger.debug("Action engaged")
         self.logger.info(self.log_line)
+        if configuration:
+            self.logger.info(configuration)
+
 
 class TestLogActionFactory(lingerActions.LingerBaseActionFactory):
     """TestLogActionFactory generates TestLogAction instances"""
@@ -24,6 +28,6 @@ class TestLogActionFactory(lingerActions.LingerBaseActionFactory):
     def get_fields(self):
         fields, optional_fields = super(TestLogActionFactory, self).get_fields()
 
-        fields += [('log_line','string')]
+        fields += [('log_line', 'string')]
 
-        return (fields, optional_fields)
+        return fields, optional_fields

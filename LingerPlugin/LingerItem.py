@@ -1,8 +1,9 @@
 import logging
-from yapsy.IPlugin import IPlugin
+
 
 class LingerItem(object):
     """LingerItem is the base for linger items"""
+
     def __init__(self, configuration):
         super(LingerItem, self).__init__()
         self.configuration = configuration

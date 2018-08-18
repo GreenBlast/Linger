@@ -1,5 +1,7 @@
 import logging
+from future.utils import itervalues
 from yapsy.PluginManager import PluginManager
+
 
 class LingerBaseManager(object):
     """LingerBaseManager is the base for all linger mangers"""
@@ -22,5 +24,5 @@ class LingerBaseManager(object):
         return self.loaded_plugins_by_types.keys()
 
     def cleanup(self):
-        for instance in self.plugin_instances.itervalues():
+        for instance in itervalues(self.plugin_instances):
             instance.cleanup()

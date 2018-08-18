@@ -1,6 +1,7 @@
 """
 TriggersManager manages the instances of all the triggers in Linger
 """
+from future.utils import itervalues
 from LingerManagers.LingerBaseManager import LingerBaseManager
 
 class TriggersManager(LingerBaseManager):
@@ -15,7 +16,7 @@ class TriggersManager(LingerBaseManager):
         """
         Start all the triggers
         """
-        for trigger_item in self.plugin_instances.itervalues():
+        for trigger_item in itervalues(self.plugin_instances):
             if trigger_item.enabled is True:
                 trigger_item.start()
 
@@ -23,7 +24,7 @@ class TriggersManager(LingerBaseManager):
         """
         Stops all the triggers
         """
-        for trigger_item in self.plugin_instances.itervalues():
+        for trigger_item in itervalues(self.plugin_instances):
             trigger_item.stop()
 
     def set_enabled(self, trigger_uuid):

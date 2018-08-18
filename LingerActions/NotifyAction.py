@@ -21,7 +21,7 @@ class NotifyAction(lingerActions.LingerBaseAction):
 
     def act(self, configuration=None):
         self.logger.debug("Action engaged")
-        self.communication_adapter().send_message(self.message_subject, self.message_text)
+        self.communication_adapter().send_message(self.message_subject, self.message_text, )
 
 class NotifyActionFactory(lingerActions.LingerBaseActionFactory):
     """Base action factory for linger"""

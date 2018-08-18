@@ -44,7 +44,7 @@ class ThreadedPeriodicalTrigger(lingerTriggers.LingerBaseTrigger):
     def stop(self):
         try:
             self.stop_event.set()
-        except Exception, e:
+        except Exception as e:
             self.logger.error(e)
 
 class ThreadedPeriodicalTriggerFactory(lingerTriggers.LingerBaseTriggerFactory):

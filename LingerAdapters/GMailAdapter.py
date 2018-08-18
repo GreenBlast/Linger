@@ -4,13 +4,26 @@ import LingerAdapters.LingerBaseAdapter as lingerAdapters
 import imaplib
 import smtplib
 import email
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.MIMEText import MIMEText
-from email import Encoders
+#
+# try:
+#     from email.MIMEMultipart import MIMEMultipart
+#     from email.MIMEBase import MIMEBase
+#     from email.MIMEText import MIMEText
+#     from email.Encoders import encode_base64
+# except ImportError:
+#     # Python3
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.encoders import encode_base64
+
+import base64
 import re
 import uuid
 import os
+from future.utils import itervalues
+
+import LingerConstants
 
 
 class GMailAdapter(lingerAdapters.LingerBaseAdapter):
@@ -22,7 +35,7 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
 
         self.scheduled_job = None
         self.subscribers_dict = {}
-        self.find_uid_reg = re.compile(r"""\(UID\ (?P<UID>\d+)\)""")
+        self.find_uid_reg = re.compile(r"""\(UID (?P<UID>\d+)\)""")
         
         # fields
         self._gmail_user = self.configuration["gmail_user"]
@@ -67,14 +80,14 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
         self.scheduled_job = self.scheduler.add_job(self.monitor_new_mails, 'interval', seconds=self.interval)
 
     def stop_monitor_mails(self):
-        if self.scheduled_job != None:
+        if self.scheduled_job is not None:
             self.scheduled_job.remove()
         
         self.imap_server.close()
             
     def get_last_uid(self):
         # Getting last uid
-        _, last_message  = self.imap_server.select('INBOX')
+        _, last_message = self.imap_server.select('INBOX')
         _, last_message_uid_info = self.imap_server.fetch(last_message[0], '(UID)')
         
         last_uid = self.find_uid_reg.findall(last_message_uid_info[0])[0]
@@ -85,7 +98,7 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
         update_uid_flag = False
         try:
             _, last_message = self.imap_server.select('INBOX')
-        except Exception, e:
+        except Exception as e:
             self.connect_to_imap_server()
             _, last_message = self.imap_server.select('INBOX')
 
@@ -105,13 +118,13 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
         if update_uid_flag:
             self.last_uid = self.get_last_uid()
             # TODO should remove this?
-            #update_uid_flag = False
+            # update_uid_flag = False
 
         for mail in mail_list:
-            for subscriber_callback in self.subscribers_dict.itervalues():
+            for subscriber_callback in itervalues(self.subscribers_dict):
                 subscriber_callback(email.message_from_string(mail))
 
-    def send_mail(self, to, subject, text, attach_image_path=None):
+    def send_mail(self, to, subject, text, **kwargs):
         message = MIMEMultipart()
 
         message['From'] = self._gmail_user
@@ -120,14 +133,30 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
 
         message.attach(MIMEText(text))
 
-        if attach_image_path is not None:
+        if LingerConstants.FILE_PATH_SRC in kwargs:
             image_part = MIMEBase('application', 'octet-stream')
-            image_part.set_payload(open(attach_image_path, 'rb').read())
-            Encoders.encode_base64(image_part)
+            image_part.set_payload(open(kwargs[LingerConstants.FILE_PATH_SRC], 'rb').read())
+            encode_base64(image_part)
             image_part.add_header('Content-Disposition',
-                                  'attachment; filename="%s"' % os.path.basename(attach_image_path))
+                                  'attachment; filename="%s"' % os.path.basename(kwargs[LingerConstants.FILE_PATH_SRC]))
             message.attach(image_part)
-            
+
+        elif LingerConstants.IMAGE_DATA in kwargs:
+            image_part = MIMEBase('application', 'octet-stream')
+            image_part.set_payload(kwargs[LingerConstants.IMAGE_DATA])
+            encode_base64(image_part)
+            image_part.add_header('Content-Disposition',
+                                  'attachment; filename="image.jpg"')
+            message.attach(image_part)
+
+        elif LingerConstants.IMAGE_BASE64_DATA in kwargs:
+            image_part = MIMEBase('application', 'octet-stream')
+            image_part.set_payload(base64.b64decode(kwargs[LingerConstants.IMAGE_BASE64_DATA]))
+            encode_base64(image_part)
+            image_part.add_header('Content-Disposition',
+                                  'attachment; filename="image.jpg"')
+            message.attach(image_part)
+
         mail_server = smtplib.SMTP("smtp.gmail.com", 587)
         mail_server.ehlo()
         mail_server.starttls()
@@ -137,7 +166,7 @@ class GMailAdapter(lingerAdapters.LingerBaseAdapter):
         mail_server.quit()
 
     def send_message(self, subject, text, **kwargs):
-            self.send_mail(self.recipient_email, subject, text, kwargs.get("image_path", None))
+            self.send_mail(self.recipient_email, subject, text, **kwargs)
 
 
 class GMailAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):

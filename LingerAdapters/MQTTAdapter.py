@@ -108,7 +108,8 @@ class MQTTAdapter(lingerAdapters.LingerBaseAdapter):
         if self.username and self.password:
             self.client.username_pw_set(self.username, self.password)
         if self.ca_cert:
-            self.client.tls_set(self.ca_cert, certfile=self.certificate, keyfile=self.keyfile, tls_version=ssl.PROTOCOL_TLSv1_2)
+            if not self.client._ssl_context:
+                self.client.tls_set(self.ca_cert, certfile=self.certificate, keyfile=self.keyfile, tls_version=ssl.PROTOCOL_TLSv1_2)
 
         self.client.connect(self.server_address, self.server_port, 60)
         self.userdata["connected"] = True
@@ -135,10 +136,10 @@ class MQTTAdapter(lingerAdapters.LingerBaseAdapter):
 
             # If not subscribed yet to this topic
             if not self.subscriptions[topic]:
-                # paho mqtt currently can't handle unicode in python 2
-                self.client.subscribe(topic.encode("ascii", 'replace'), 2)
+                self.client.subscribe(topic, 2)
 
             self.subscriptions[topic].add(callback)
+            self.logger.debug("Number of subscriptions for topic:%s is:%s", topic, len(self.subscriptions[topic]))
 
     def unsubscribe(self, topic, callback):
         """Unsubscribing from a topic"""
@@ -154,8 +155,7 @@ class MQTTAdapter(lingerAdapters.LingerBaseAdapter):
             # If no more subscribers to this topic, unsubscribe
             if not self.subscriptions[topic]:
                 if self.userdata["connected"]:
-                    # paho mqtt currently can't handle unicode in python 2
-                    self.client.unsubscribe(topic.encode("ascii", 'replace'))
+                    self.client.unsubscribe(topic)
                 del self.subscriptions[topic]
 
             # If there are no more subscriptions, stop looping and disconnect
@@ -203,7 +203,7 @@ class MQTTAdapter(lingerAdapters.LingerBaseAdapter):
                     publish_event.set()
                     publish_check_thread.join()
                 else:
-                    self.logger.debug("Success waiting for event publish")
+                    self.logger.debug("Success waiting for event publish. Topic:%s", topic)
 
             # If there is no subscriptions we should stop loop
             if not self.subscriptions:
