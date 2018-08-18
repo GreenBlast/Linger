@@ -1,0 +1,9 @@
+[Core]
+Name = MQTTReceivedTriggerFactory
+Module = MQTTReceivedTrigger
+
+[Documentation]
+Description = MQTTReceivedTriggerFactory creating instances of MQTTReceivedTrigger which  triggers by MQTT message and calls all associated actions
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/

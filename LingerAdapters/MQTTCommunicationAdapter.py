@@ -3,7 +3,11 @@ MQTTCommunicationAdapter implements publishing messages to an MQTT broker with a
 """
 
 # Operation specific imports
+import json
+import base64
+
 import LingerAdapters.LingerBaseAdapter as lingerAdapters
+import LingerConstants
 
 
 class MQTTCommunicationAdapter(lingerAdapters.LingerBaseAdapter):
@@ -23,11 +27,28 @@ class MQTTCommunicationAdapter(lingerAdapters.LingerBaseAdapter):
         """Getter for the bot adapter"""
         return self.get_adapter_by_uuid(self.mqtt_adapter_uuid)
 
-    def send_message(self, subject, text):
-        self.mqtt_adapter().publish_mqtt_message(self.topic, text)
+    def subscribe(self, callback):
+        self.mqtt_adapter().subscribe(self.topic, callback)
+
+    def unsubscribe(self, callback):
+        self.mqtt_adapter().unsubscribe(self.topic, callback)
+
+    def send_message(self, subject, text, **kwargs):
+        if kwargs:
+            data = kwargs.copy()
+            if LingerConstants.IMAGE_DATA in data:
+                data[LingerConstants.IMAGE_BASE64_DATA] = base64.b64encode(kwargs[LingerConstants.IMAGE_DATA]).decode('utf-8')
+                del data[LingerConstants.IMAGE_DATA]
+
+            data = json.dumps(data)
+            self.mqtt_adapter().publish_mqtt_message(self.topic, data)
+        else:
+            self.mqtt_adapter().publish_mqtt_message(self.topic, text)
+
 
 class MQTTCommunicationAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     """MQTTCommunicationAdapterFactory generates MQTTCommunicationAdapter instances"""
+
     def __init__(self):
         super(MQTTCommunicationAdapterFactory, self).__init__()
         self.item = MQTTCommunicationAdapter
@@ -43,4 +64,4 @@ class MQTTCommunicationAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
         fields += [('mqtt_adapter', 'uuid'),
                    ('topic', 'string')]
 
-        return (fields, optional_fields)
+        return fields, optional_fields

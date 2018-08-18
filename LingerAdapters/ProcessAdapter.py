@@ -1,10 +1,11 @@
-import LingerAdapters.LingerBaseAdapter as lingerAdapters 
+import LingerAdapters.LingerBaseAdapter as lingerAdapters
 
 # Operation specific imports
 import subprocess
 import threading
 import time
 import os
+import sys
 import shlex
 import psutil
 
@@ -30,12 +31,16 @@ class ProcessAdapter(lingerAdapters.LingerBaseAdapter):
     def start_process(self):
         self.logger.info("Starting process:%s" % self.command)
         with self.lock:
+            if sys.platform == 'win32':
+                args = self.command
+            else:
+                args = shlex.split(self.command)
             if self.process is None:
-                self.process = subprocess.Popen(shlex.split(self.command))
+                self.process = subprocess.Popen(args)
 
             if self.process is not None:
                 self.logger.info("Started process:%s success" % self.command)
-        
+
     def stop_process(self):
         with self.lock:
             self.logger.info("killing process: %s" % self.command)
@@ -60,12 +65,12 @@ class ProcessAdapter(lingerAdapters.LingerBaseAdapter):
                 self.logger.info("Got os error")
                 # Process is already gone
                 pass
-            
+
             self.process = None
 
             self.logger.info("killed process:%s" % self.command)
             time.sleep(self.kill_wait)
-    
+
     def restart(self):
         self.logger.info("restarting process:%s" % self.command)
         self.stop_process()
@@ -80,8 +85,8 @@ class ProcessAdapter(lingerAdapters.LingerBaseAdapter):
             self.logger.info("stopping all children processes")
             for child_process in psutil.Process(self.process.pid).children():
                 self.logger.info("killing pid:{}".format(child_process.pid))
-                child_process.kill()       
-                del child_process                                              
+                child_process.kill()
+                del child_process
 
             self.logger.info("killing process")
             self.process.kill()
@@ -100,7 +105,7 @@ class ProcessAdapterFactory(lingerAdapters.LingerBaseAdapterFactory):
     def get_instance(self, configuration):
         adapter = ProcessAdapter(configuration)
         return adapter
-    
+
     def get_instance_name(self):
         return "ProcessAdapter"
 

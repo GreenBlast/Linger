@@ -8,11 +8,17 @@ import LingerAdapters.LingerBaseAdapter as lingerAdapters
 import telegram
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
+from io import BytesIO
+import base64
+import LingerConstants
+
 
 class TelegramBotAdapter(lingerAdapters.LingerBaseAdapter):
     """TelegramBotAdapter using a telegram bot"""
 
     AUTHORIZED_USERS_DEFAULT = "[]"
+
+
     def __init__(self, configuration):
         super(TelegramBotAdapter, self).__init__(configuration)
         self.logger.debug("TelegramBotAdapter started")
@@ -62,17 +68,33 @@ class TelegramBotAdapter(lingerAdapters.LingerBaseAdapter):
         """
         self.dispatcher.remove_handler(handler)
 
-    def send_telegram_message(self, chat_id, subject, text, image_path=None):
+    def send_telegram_message(self, chat_id, subject, text, **kwargs):
         """
         Sending a message to the subscribers
         """
-        if image_path:
+        if LingerConstants.IMAGE_DATA in kwargs:
             message = "{subject}\n{text}".format(subject=subject, text=text)
-            try:
-                self.updater.bot.send_photo(chat_id=chat_id, text=message, photo=open(image_path, 'rb'))
-            except IOError, e:
-                self.logger.exception(e)
-                self.logger.info("Failed opening photo")
+            bio = BytesIO()
+            bio.name = 'image.jpeg'
+            image_data = kwargs[LingerConstants.IMAGE_DATA]
+            if isinstance(image_data, str):
+                image_data = image_data.encode('utf-8')
+            bio.write(image_data)
+            bio.seek(0)
+            self.updater.bot.send_photo(chat_id=chat_id, text=message, photo=bio)
+        elif LingerConstants.IMAGE_BASE64_DATA in kwargs:
+            message = "{subject}\n{text}".format(subject=subject, text=text)
+            bio = BytesIO()
+            bio.name = 'image.jpeg'
+            image_data = base64.b64decode(kwargs[LingerConstants.IMAGE_BASE64_DATA])
+            if isinstance(image_data, str):
+                image_data = image_data.encode('utf-8')
+            bio.write(image_data)
+            bio.seek(0)
+            self.updater.bot.send_photo(chat_id=chat_id, text=message, photo=bio)
+        elif LingerConstants.TEXT_DATA in kwargs:
+            message = kwargs[LingerConstants.TEXT_DATA]
+            self.updater.bot.send_message(chat_id=chat_id, text=message)
         else:
             # Formatting message
             message = "<b>{subject}</b>\n{text}".format(subject=subject, text=text)

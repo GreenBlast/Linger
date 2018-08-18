@@ -1,0 +1,9 @@
+[Core]
+Name = SendDataActionFactory
+Module = SendDataAction
+
+[Documentation]
+Description = SendDataActionFactory creating instances of SendDataAction which sends data via communication adapter
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
