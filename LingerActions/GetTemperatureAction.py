@@ -24,7 +24,7 @@ class GetTemperatureAction(lingerActions.LingerBaseAction):
 
     def act(self, configuration=None):
         answer = self.rmbridge_adapter().get_temperature()
-        self.communication_adapter().send_message("Here is the temperature", str(answer))
+        self.communication_adapter().send_message("Here is the temperature", str(answer), )
 
 class GetTemperatureActionFactory(lingerActions.LingerBaseActionFactory):
     """Factory for GetTemperatureAction"""

@@ -1,6 +1,7 @@
 from LingerPlugin.LingerPlugin import LingerPlugin
 from LingerPlugin.LingerItem import LingerItem
 
+
 class LingerBaseAction(LingerItem):
     """Base Action for linger"""
     def __init__(self, configuration):
@@ -11,6 +12,7 @@ class LingerBaseAction(LingerItem):
         Performing the defined action of the LingerAction
         """
         self.logger.debug("Action engaged, Configuration:%s", configuration)
+
 
 class LingerBaseActionFactory(LingerPlugin):
     """Base action factory for linger"""
@@ -26,4 +28,4 @@ class LingerBaseActionFactory(LingerPlugin):
 
     def get_fields(self):
         fields, optional_fields = super(LingerBaseActionFactory, self).get_fields()
-        return (fields, optional_fields)
+        return fields, optional_fields

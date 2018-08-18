@@ -5,6 +5,9 @@ import os
 import glob
 import time
 
+import LingerConstants
+
+
 class GetGrabAndSendMailAction(lingerActions.LingerBaseAction):
     """Action for getting snapshot from camera and sending to MailAdapter"""
 
@@ -46,8 +49,13 @@ class GetGrabAndSendMailAction(lingerActions.LingerBaseAction):
         self.wait_for_camera_online()
 
         self.get_local_ispy_adapter().grab_snapshot()
+        time.sleep(2)
         picture_path = self._find_last_picture()
-        self.get_communication_adapter().send_message(self.mail_recipient, self.mail_subject, image_path=picture_path)
+        with open(picture_path, 'rb') as image_handle:
+            image_data = image_handle.read()
+            data = {LingerConstants.IMAGE_DATA: image_data}
+            self.get_communication_adapter().send_message(self.mail_recipient, self.mail_subject, **data)
+            # TODO Add Resetting sleep status - don't send everything, have a cool down timer
 
 
 

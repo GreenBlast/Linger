@@ -12,7 +12,7 @@ class ISpyStartAction(lingerActions.LingerBaseAction):
     def act(self, configuration):
         self.logger.debug("Action engaged")
         self.ispy_adapter().alerts_on()
-        self.ispy_adapter().start()
+        self.ispy_adapter().all_on()
 
 class ISpyStartActionFactory(lingerActions.LingerBaseActionFactory):
     """Base action factory for linger"""
