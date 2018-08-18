@@ -2,3 +2,6 @@
 Configurator/static/node_modules/
 Configurator/node_modules/
 .idea/
+venv/
+venv3/
+__pycache__/
