@@ -8,6 +8,7 @@ import logging
 import json
 from collections import defaultdict
 from apscheduler.schedulers.background import BackgroundScheduler
+from future.utils import iteritems, itervalues
 
 from LingerManagers.AdaptersManager import AdaptersManager
 from LingerManagers.ActionsManager import ActionsManager
@@ -17,7 +18,7 @@ ABSPATH = os.path.abspath(__file__)
 DIR_NAME = os.path.dirname(ABSPATH)
 os.chdir(DIR_NAME)
 
-LINGER_CONFIGURATION_FILEPATH = "Linger.config"
+LINGER_CONFIGURATION_DEFAULT_PATH = "Linger.config"
 
 LOG_FILE_LOCATION = r"." + os.sep + r"Logs" + os.sep + time.strftime('%Y-%m-%d-%H-%M-%S') + ".log"
 # LOG_LEVEL = logging.INFO
@@ -67,7 +68,7 @@ class Linger(object):
         self.actions_manager = ActionsManager(self.configuration)
         self.triggers_manager = TriggersManager(self.configuration)
 
-        for item in self.configuration["Items"].itervalues():
+        for item in itervalues(self.configuration["Items"]):
             if item["type"] == "Triggers":
                 self.triggers_manager.create_trigger(item)
             elif item["type"] == "Actions":
@@ -76,7 +77,7 @@ class Linger(object):
                 self.adapters_manager.create_adapter(item)
 
         # Register triggers
-        for trigger_id, trigger_action_item in self.configuration["TriggerActions"].iteritems():
+        for trigger_id, trigger_action_item in iteritems(self.configuration["TriggerActions"]):
             if trigger_action_item['enabled']:
                 self.triggers_manager.set_enabled(trigger_id)
             for action_id in trigger_action_item['actions']:
@@ -87,18 +88,14 @@ class Linger(object):
         """
         Building the configuration to be sent to the items
         """
-        configuration = defaultdict(None)
-        configuration['shutdown'] = self.shutdown
-        configuration['set_should_restart'] = self.set_should_restart
-        configuration['get_adapter_by_uuid'] = self.get_adapter_by_uuid
-        configuration['get_trigger_labels_of_actions'] = self.get_trigger_labels_of_actions
-        configuration['scheduler'] = self.scheduler
-        configuration['trigger_callback'] = self.trigger_callback
-        configuration['trigger_specific_action_callback'] = self.trigger_specific_action_callback
-        configuration['dir_paths'] = configuration_from_file['dir_paths']
-        configuration['Items'] = configuration_from_file['Items']
-        configuration["counter_keep_alive"] = configuration_from_file["counter_keep_alive"]
-        configuration["TriggerActions"] = configuration_from_file["TriggerActions"]
+        configuration = {'shutdown': self.shutdown, 'set_should_restart': self.set_should_restart,
+                         'get_adapter_by_uuid': self.get_adapter_by_uuid,
+                         'get_trigger_labels_of_actions': self.get_trigger_labels_of_actions,
+                         'scheduler': self.scheduler, 'trigger_callback': self.trigger_callback,
+                         'trigger_specific_action_callback': self.trigger_specific_action_callback,
+                         'dir_paths': configuration_from_file['dir_paths'], 'Items': configuration_from_file['Items'],
+                         "counter_keep_alive": configuration_from_file["counter_keep_alive"],
+                         "TriggerActions": configuration_from_file["TriggerActions"]}
 
         return configuration
 
@@ -107,12 +104,12 @@ class Linger(object):
         Activating an action according to trigger
         """
         self.logger.debug("trigger calling back: %s", self.actions_by_trigger[trigger_uuid])
-        for action in self.actions_by_trigger[trigger_uuid].itervalues():
+        for action in itervalues(self.actions_by_trigger[trigger_uuid]):
             action.act(trigger_data)
 
-    def trigger_specific_action_callback(self, trigger_uuid, action_uuid, trigger_data): # Want this method name! pylint: disable=C0103
+    def trigger_specific_action_callback(self, trigger_uuid, action_uuid, trigger_data):  # Want this method name! pylint: disable=C0103
         """
-        Activating an action according to trigger and the action label recieved by the trigger
+        Activating an action according to trigger and the action label received by the trigger
         """
         self.logger.debug("trigger calling back: %s", self.actions_by_trigger[trigger_uuid])
         action = self.actions_by_trigger[trigger_uuid][action_uuid]
@@ -150,24 +147,25 @@ class Linger(object):
 
     def get_adapter_by_uuid(self, uuid_of_adapter):
         """
-        Returns adapater instance by its ID
+        Returns adapter instance by its ID
         """
-        adapter = None
+        # noinspection PyBroadException
         try:
             adapter = self.adapters_manager.get_adapter_by_uuid(uuid_of_adapter)
-        except Exception: # Don't want to crash pylint: disable=W0703
+        except Exception:  # Don't want to crash pylint: disable=W0703
+            self.logger.error("Couldn't find adapter with ID:%s, Probably misconfiguration", uuid_of_adapter, exc_info=True)
             adapter = None
 
         return adapter
 
     def get_trigger_labels_of_actions(self, uuid_of_trigger):
         """
-        Returns adapater instance by its ID
+        Returns adapter instance by its ID
         """
-        trigger_actions_labels = None
+        # noinspection PyBroadException
         try:
             trigger_actions_labels = self.triggers_manager.get_trigger_labels_of_actions(uuid_of_trigger)
-        except Exception: # Don't want to crash pylint: disable=W0703
+        except Exception:  # Don't want to crash pylint: disable=W0703
             trigger_actions_labels = None
 
         return trigger_actions_labels
@@ -183,7 +181,6 @@ class Linger(object):
         """
         Blocking loop function to keep running the main thread
         """
-        # TODO need to make the timeout and log alive task configurable
         while self.should_loop:
             time.sleep(1)
 
@@ -204,13 +201,19 @@ class Linger(object):
 
             os.execv(sys.executable, args)
 
+
 def main():
     """
     Linger main function, loads configuration and starting
     """
     LOGGER.info("Linger has started, be afraid, be very afraid, Press Ctrl+c to quit")
 
-    with open(LINGER_CONFIGURATION_FILEPATH, 'r') as configuration_file:
+    linger_configuration_file_path = LINGER_CONFIGURATION_DEFAULT_PATH
+
+    if 2 >= len(sys.argv):
+        linger_configuration_file_path = sys.argv[1]
+
+    with open(linger_configuration_file_path, 'r') as configuration_file:
         json_configuration = configuration_file.read()
         configuration = json.loads(json_configuration)
         configuration_file.close()
