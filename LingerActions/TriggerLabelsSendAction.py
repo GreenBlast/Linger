@@ -5,6 +5,8 @@ TriggerLabelsSendAction sends a message containing the list of labels associated
 import json
 
 import LingerActions.LingerBaseAction as lingerActions
+import LingerConstants
+
 
 class TriggerLabelsSendAction(lingerActions.LingerBaseAction):
     """Sends a message containing the list of labels associated with a trigger"""
@@ -25,7 +27,9 @@ class TriggerLabelsSendAction(lingerActions.LingerBaseAction):
 
     def act(self, configuration=None):
         labels = self.configuration["get_trigger_labels_of_actions"](self.trigger_uuid)
-        self.communication_adapter().send_message("", json.dumps(labels))
+        data = {LingerConstants.LABELS_LIST: labels}
+
+        self.communication_adapter().send_message(self.label, json.dumps(data))
 
 
 class TriggerLabelsSendActionFactory(lingerActions.LingerBaseActionFactory):

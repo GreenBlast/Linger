@@ -1,4 +1,6 @@
 import LingerActions.LingerBaseAction as lingerActions
+import LingerConstants
+
 
 class LogFileChangeAction(lingerActions.LingerBaseAction):
     """Logging that there was a change in a file"""
@@ -11,7 +13,7 @@ class LogFileChangeAction(lingerActions.LingerBaseAction):
 
     def act(self, configuration):
         self.logger.debug("Action engaged")
-        log_line = "File changed: %s\nChange was:%s\n" % (configuration["src_path"], configuration["event_type"])
+        log_line = "File changed: %s\nChange was:%s\n" % (configuration[LingerConstants.FILE_PATH_SRC], configuration["event_type"])
         self.log_adapter().log(log_line)
 
 class LogFileChangeActionFactory(lingerActions.LingerBaseActionFactory):

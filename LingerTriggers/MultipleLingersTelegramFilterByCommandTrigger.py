@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, Filters
 
+import LingerConstants
 import LingerTriggers.LingerBaseTrigger as lingerTriggers
 
 CHOOSING_LINGER = 1
@@ -91,10 +92,9 @@ class MultipleLingersTelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTri
         if self.chosen_linger == self.DEFAULT_REFRESH_PHRASE:
             self.chosen_linger = None
             update.message.reply_text("Refreshing lingers...\nThis might take some time...")
+            # TODO: Set not yet got from lingers, to update about command loading
             self.collect_commands_from_lingers()
-            available_lingers = [linger_name for linger_name in self.lingers_commands_lists.keys() if self.lingers_commands_lists[linger_name]]
-            update.message.reply_text("Done loading commands, \n\
-            Active lingers available are: {}".format(",".join(available_lingers)), reply_markup=self.markup)
+            update.message.reply_text("Sent requests for commands", reply_markup=self.markup)
             return CHOOSING_LINGER
 
         elif self.chosen_linger in self.lingers_names:
@@ -114,15 +114,14 @@ class MultipleLingersTelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTri
             else:
                 # No commands for given linger
                 linger_name = self.chosen_linger
-                # Unsetting the current chosen linger
+                # Un-setting the current chosen linger
                 self.chosen_linger = None
                 update.message.reply_text("No commands were loaded from Linger: {}".format(linger_name), reply_markup=self.markup)
 
         return CHOOSING_LINGER
 
-
     def trigger_get_command(self, bot, update): # Telegram Handler method, can't change signature pylint: disable=w0613
-        """Checking trigger if should enagage an action"""
+        """Checking trigger if should engage an action"""
         # Check authorization
         if str(update.message.from_user.id) in self.authorized_users:
             command = update.message.text
@@ -153,66 +152,23 @@ class MultipleLingersTelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTri
 
     def trigger_engaged(self, command=None):
         trigger_data = {}
+        result = None
         if command:
-            trigger_data["command"] = command
+            trigger_data[LingerConstants.COMMAND_NAME] = command
         for action in self.actions_by_labels[self.chosen_linger]:
             result = self.trigger_specific_action_callback(self.uuid, action.uuid, trigger_data)
 
         return result
 
-    def load_commands_from_specific_linger(self, linger_name):
-        """
-        Loading command from a given linger
-        :param linger_name: Given linger name
-        """
-        received_commands_list = []
-        trigger_data = {"should_return": True, "trigger_label": self.label}
-        for action in self.actions_by_labels[linger_name]:
-            result = self.trigger_specific_action_callback(self.uuid, action.uuid, trigger_data)
-            if result:
-                try:
-                    received_commands_list += json.loads(result)
-                except ValueError:
-                    received_commands_list = None
-
-        self.logger.debug("got commands %s", received_commands_list)
-
-        if received_commands_list:
-            keyboard_layout = []
-            commands = []
-            received_commands_list.sort()
-            for command in received_commands_list:
-                keyboard_layout += [[command]]
-                commands.append(command)
-
-            keyboard_layout += [[self.DEFAULT_END_PHRASE]]
-
-            self.lingers_commands_lists[linger_name] = {"Markup": ReplyKeyboardMarkup(keyboard_layout, one_time_keyboard=True),
-            "Commands": commands}
-
-        else:
-            self.lingers_commands_lists[linger_name] = None
-
     def collect_commands_from_lingers(self):
-        """Collecting commands from all the lingers"""
+        """Requesting commands from all the lingers"""
 
         for linger_name in self.lingers_names:
-            # Check that we are still running
-            with self.lock:
-                if not self.running:
-                    return
-
-            self.logger.debug("Loading commands for linger %s", linger_name)
-            self.load_commands_from_specific_linger(linger_name)
-
-    def start_collect_commands(self):
-        """First time call to collection of commands from linger"""
-        self.collect_commands_from_lingers()
-        with self.lock:
-            if not self.running:
-                return
-
-        self.scheduled_job = self.scheduler.add_job(self.collect_commands_from_lingers, 'interval', seconds=self.DEFAULT_REFRESH_INTERVAL)
+            self.logger.debug("Requesting commands for linger %s", linger_name)
+            trigger_data = {LingerConstants.TRIGGER_ACTION: LingerConstants.REQUEST_COMMAND_ACTION,
+                            LingerConstants.TRIGGER_CALLBACK: self.command_retrieve_callback}
+            for action in self.actions_by_labels[linger_name]:
+                self.trigger_specific_action_callback(self.uuid, action.uuid, trigger_data)
 
     def start(self):
         # Building the list of lingers to command
@@ -230,23 +186,60 @@ class MultipleLingersTelegramFilterByCommandTrigger(lingerTriggers.LingerBaseTri
         self.markup = self.lingers_layouts
         self.telegram_bot_adapter().add_handler(self.conversation_handler)
 
-        self.running = True
+        self.subscribe_to_actions()
 
-        with self.lock:
-            if not self.running:
-                return
+    def command_retrieve_callback(self, linger_name, payload, **kwargs):
+        """
+        Loads command retrieved from another linger, as a callback
+        """
+        self.logger.debug("Got payload:%s for linger:%s", payload, linger_name)
+        received_commands_list = None
+        if payload:
+            try:
+                loaded_payload = json.loads(payload.decode("utf-8"))
+                received_commands_list = loaded_payload.get(LingerConstants.LABELS_LIST, None)
+            except ValueError:
+                self.logger.error("Not a JSON", exc_info=True)
+                received_commands_list = None
+            except TypeError:
+                self.logger.error("Got bytes instead of string", exc_info=True)
+                received_commands_list = None
 
-        self.scheduled_job = self.scheduler.add_job(self.start_collect_commands, 'date',
-                                                    run_date=datetime.now() + timedelta(0, 5))
+
+        self.logger.debug("got commands %s", received_commands_list)
+
+        if received_commands_list:
+            keyboard_layout = []
+            commands = []
+            received_commands_list.sort()
+            for command in received_commands_list:
+                keyboard_layout += [[command]]
+                commands.append(command)
+
+            keyboard_layout += [[self.DEFAULT_END_PHRASE]]
+
+            with self.lock:
+                self.lingers_commands_lists[linger_name] = {"Markup": ReplyKeyboardMarkup(keyboard_layout, one_time_keyboard=True),
+                "Commands": commands}
+
+    def subscribe_to_actions(self):
+        for linger_name in self.lingers_names:
+            trigger_data = {LingerConstants.TRIGGER_ACTION: LingerConstants.SUBSCRIBE_ACTION,
+                            LingerConstants.TRIGGER_CALLBACK: self.command_retrieve_callback,
+                            LingerConstants.LINGER_NAME:linger_name}
+            for action in self.actions_by_labels[linger_name]:
+                self.trigger_specific_action_callback(self.uuid, action.uuid, trigger_data)
+
+    def unsubscribe_from_actions(self):
+        for linger_name in self.lingers_names:
+            trigger_data = {LingerConstants.TRIGGER_ACTION: LingerConstants.UNSUBSCRIBE_ACTION,
+                            LingerConstants.TRIGGER_CALLBACK: self.command_retrieve_callback}
+            for action in self.actions_by_labels[linger_name]:
+                self.trigger_specific_action_callback(self.uuid, action.uuid, trigger_data)
 
     def stop(self):
-        with self.lock:
-            self.running = False
-            if self.scheduled_job:
-                self.scheduled_job.remove()
-                self.scheduled_job = None
-
         self.telegram_bot_adapter().remove_handler(self.conversation_handler)
+        self.unsubscribe_from_actions()
 
     def register_action(self, action):
         super(MultipleLingersTelegramFilterByCommandTrigger, self).register_action(action)

@@ -1,17 +1,20 @@
+import LingerConstants
 import LingerTriggers.DirWatchTrigger as dirWatchTrigger
 
 # Operation specific imports
 from pathtools.patterns import match_path_against
 import os
 
+
 class FilePathNotValidException(Exception):
     """FilePathNotValidException is raised when the trigger file location is not valid"""
     pass        
 
+
 class FileDeleteTrigger(dirWatchTrigger.DirWatchTrigger):
     """Trigger watches for changes in a directory"""
 
-    ALLOWED_TRIGGER_TYPES_DEFAULT = ['deleted']
+    ALLOWED_TRIGGER_TYPES_DEFAULT = "[\'deleted\']"
 
     def __init__(self, configuration):
         super(FileDeleteTrigger, self).__init__(configuration)
@@ -59,9 +62,10 @@ class FileDeleteTrigger(dirWatchTrigger.DirWatchTrigger):
         except:
             pass
 
-    def trigger_engaged(self, event_details):
+    def trigger_engaged(self, command=None):
         "Called when a change occured and matched the file pattern"
         # Check if the event types matches
+        event_details = command
         self.logger.debug("FileDeleteTrigger callback_called")
         self.logger.debug("event type is:%s allowed types:%s" % (event_details.event_type, self.allowed_trigger_types,))
 
@@ -71,15 +75,18 @@ class FileDeleteTrigger(dirWatchTrigger.DirWatchTrigger):
             event_matches_path = match_path_against(event_details.src_path, [self.trigger_file_fullpath], case_sensitive=False)
             self.logger.debug("event path: %s matches pattern: %s, bool is :%s" % (event_details.src_path, self.trigger_file_fullpath, event_matches_path))
             if event_matches_path is True:
-                trigger_data = {}
-                trigger_data["event_type"] = event_details.event_type
-                trigger_data["is_directory"] = event_details.is_directory
-                trigger_data["src_path"] = event_details.src_path
-                self.trigger_callback(self.uuid,trigger_data)
+                trigger_data = {"event_type": event_details.event_type,
+                                "is_directory": event_details.is_directory,
+                                LingerConstants.FILE_PATH_SRC: event_details.src_path}
+
+                if self.trigger_additional_data:
+                    trigger_data[LingerConstants.TEXT_DATA] = self.trigger_additional_data
+                self.trigger_callback(self.uuid, trigger_data)
                 # after callback, regenerate the file
                 self.create_trigger_file()
 
         # Else, do nothing, this trigger is not for us
+
 
 class FileDeleteTriggerFactory(dirWatchTrigger.DirWatchTriggerFactory):
     """FileDeleteTriggerFactory generates FileDeleteTrigger instances"""
@@ -93,6 +100,6 @@ class FileDeleteTriggerFactory(dirWatchTrigger.DirWatchTriggerFactory):
 
     def get_fields(self):
         fields, optional_fields = super(FileDeleteTriggerFactory, self).get_fields()
-        fields += [("trigger_file_name","string")]
-        optional_fields.remove(("allowed_trigger_types", ['modified', 'created', 'moved', 'deleted']));
-        return (fields, optional_fields)
+        fields += [("trigger_file_name", "string")]
+        optional_fields.remove(("allowed_trigger_types", ['modified', 'created', 'moved', 'deleted']))
+        return fields, optional_fields
