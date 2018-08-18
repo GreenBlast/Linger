@@ -1,0 +1,9 @@
+[Core]
+Name = LoadSendImageFromFilePathActionFactory
+Module = LoadSendImageFromFilePathAction
+
+[Documentation]
+Description = LoadSendImageFromFilePathActionFactory creating instances of LoadSendImageFromFilePathAction which loads an image from a given path and sends it via communication adapter
+Author = Greenblast
+Version = 1.0
+Website = https://github.com/greenblast/linger/
